@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+import ThreeDLayout from "~/components/three-d-layour.astro"
+---
+
+<!-- todo: when a user hovers on a cover image, update the background image of the text.  -->
+<Layout title="Welcome to Astro.">
+	<main class="max-w-6xl mx-auto py-10">
+		<div class="flex items-end mb-14">
+			<div class="max-w-7xl">
+				<div>mydevlist.com</div>
+				<h1 class="text-5xl font-bold py-2 bg-pattern bg-clip-text text-transparent">Dribble for developer landing pages.</h1>
+			</div>
+			<input class="rounded-md w-full text-xl text-right focus:outline-none font-bold bg-transparent" placeholder="search..." />
+		</div>
+
+		<div class="grid grid-cols-4 gap-8">
+			{
+				[
+					'https://res.cloudinary.com/khaya-zulu/image/upload/v1673125950/Screenshot_2023-01-07_at_23.12.21_xfanic.png',
+					"/cassie.png", 
+					"/jason.png",
+					"/dana.png",
+					"/delba.png",
+					"/greg.png",
+					"/pedro.png",
+					"/rodrigo.png",
+					"/dax.png",
+					"/iheanyi.png",
+				].map((src, i) => (
+					<ThreeDLayout>
+						<img 
+							src={src}
+							alt=""
+							class="h-36 w-full rounded-lg object-cover shadow-sm" />
+
+						<div class="mx-2 mb-2 mt-4">
+							<div class="text-base my-2">zackoverflow.dev</div>
+
+							<div class="text-sm mb-8">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</div>
+
+							<div class="flex justify-between gap-2 items-center">
+								<div class="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+									21 Jan 2021
+								</div>
+								<div class="flex gap-2 items-center">
+									<div class="pr-2">
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+  											<path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+										</svg>
+									</div>
+									<div class="p-2 bg-slate-200 rounded-full">
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+										</svg>						  
+									</div>
+									<div class="p-2 bg-slate-200 rounded-full">
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+										</svg>
+									</div>
+								</div>
+							</div>
+						</div>
+					</ThreeDLayout>
+				))
+			}
+		</div>
+	</main>
+</Layout>

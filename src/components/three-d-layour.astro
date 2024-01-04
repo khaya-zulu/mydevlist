@@ -1,0 +1,20 @@
+<div class="pushable bg-secondary group">
+  <div class="front bg-white border border-secondary p-2">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .pushable {
+    border-radius: 12px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline-offset: 4px;
+  }
+  .front {
+    border-radius: 12px;
+    font-size: 1.25rem;
+    transform: translateY(-6px);
+  }
+</style>
