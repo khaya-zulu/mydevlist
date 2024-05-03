@@ -1,3 +1,4 @@
 {
-  "targetDatabaseUrl": "postgresql://postgres:postgres@localhost:5432/postgres"
+  "projectId": "clvpov3fk1h8plyd8wuoxqwf6",
+  "adapter": "better-sqlite3"
 }

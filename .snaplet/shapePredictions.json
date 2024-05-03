@@ -1,0 +1,32 @@
+[
+  {
+    "schemaName": "",
+    "tableName": "Page",
+    "predictions": [
+      {
+        "input": " page description",
+        "column": "description",
+        "shape": "COMPANY_CATCH_PHRASE",
+        "confidence": 0.535546600818634,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": " page image_url",
+        "column": "imageUrl",
+        "shape": "IMAGE_URL",
+        "confidence": 0.9593562483787537,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": " page url",
+        "column": "url",
+        "shape": "IMAGE_URL",
+        "confidence": 0.8677712082862854,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  }
+]

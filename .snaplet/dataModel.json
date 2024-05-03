@@ -1,0 +1,162 @@
+{
+  "models": {
+    "Click": {
+      "id": "Click",
+      "tableName": "Click",
+      "fields": [
+        {
+          "id": "Click.id",
+          "name": "id",
+          "columnName": "id",
+          "type": "integer",
+          "isRequired": false,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": {
+            "identifier": "Click_id_seq",
+            "increment": 1
+          },
+          "hasDefaultValue": false,
+          "isId": true
+        },
+        {
+          "id": "Click.pageId",
+          "name": "pageId",
+          "columnName": "pageId",
+          "type": "integer",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false
+        },
+        {
+          "name": "Page",
+          "type": "Page",
+          "isRequired": true,
+          "kind": "object",
+          "relationName": "ClickToPage",
+          "relationFromFields": [
+            "pageId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "isList": false,
+          "isId": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false
+        }
+      ],
+      "uniqueConstraints": [
+        {
+          "name": "Click_pkey",
+          "fields": [
+            "id"
+          ]
+        }
+      ]
+    },
+    "Page": {
+      "id": "Page",
+      "tableName": "Page",
+      "fields": [
+        {
+          "id": "Page.id",
+          "name": "id",
+          "columnName": "id",
+          "type": "integer",
+          "isRequired": false,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": {
+            "identifier": "Page_id_seq",
+            "increment": 1
+          },
+          "hasDefaultValue": false,
+          "isId": true
+        },
+        {
+          "id": "Page.url",
+          "name": "url",
+          "columnName": "url",
+          "type": "text",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false
+        },
+        {
+          "id": "Page.imageUrl",
+          "name": "imageUrl",
+          "columnName": "imageUrl",
+          "type": "text",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false
+        },
+        {
+          "id": "Page.description",
+          "name": "description",
+          "columnName": "description",
+          "type": "text",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false
+        },
+        {
+          "id": "Page.createdAt",
+          "name": "createdAt",
+          "columnName": "createdAt",
+          "type": "text",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": true,
+          "isId": false
+        },
+        {
+          "name": "Click",
+          "type": "Click",
+          "isRequired": false,
+          "kind": "object",
+          "relationName": "ClickToPage",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isList": true,
+          "isId": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false
+        }
+      ],
+      "uniqueConstraints": [
+        {
+          "name": "Page_pkey",
+          "fields": [
+            "id"
+          ]
+        }
+      ]
+    }
+  },
+  "enums": {}
+}

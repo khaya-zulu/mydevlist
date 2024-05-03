@@ -10,12 +10,16 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^5.0.1",
-    "astro": "^3.2.3",
-    "tailwindcss": "^3.0.24"
+    "@astrojs/db": "^0.10.7",
+    "@astrojs/tailwind": "5.1.0",
+    "astro": "4.7.1",
+    "tailwindcss": "3.4.3"
   },
   "devDependencies": {
-    "@snaplet/seed": "^0.78.1",
-    "snaplet": "^0.78.1"
+    "@snaplet/copycat": "^5.0.0",
+    "@snaplet/seed": "0.97.6",
+    "@types/better-sqlite3": "^7.6.10",
+    "better-sqlite3": "^9.6.0",
+    "snaplet": "0.91.1"
   }
 }

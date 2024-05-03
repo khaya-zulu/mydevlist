@@ -1,13 +1,16 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import { db, Page, Click, eq, count } from "astro:db"
 
+import Layout from '~/layouts/Layout.astro';
 import ThreeDLayout from "~/components/three-d-layour.astro"
+
+const pages = await db.select({ url: Page.url, imageUrl: Page.imageUrl, description: Page.description, clicks: count(Click.id) }).from(Page).innerJoin(Click, eq(Page.id, Click.pageId)).groupBy(Page.id)
 ---
 
 <!-- todo: when a user hovers on a cover image, update the background image of the text.  -->
 <Layout title="Welcome to Astro.">
 	<main class="max-w-6xl mx-auto py-10">
-		<div class="flex items-end mb-14 w-full">
+		<div class="flex items-end mb-14 w-full mt-8">
 			<div class="flex-1 flex flex-col gap-4">
 				<div>
 					<div>mydevlist.com</div>
@@ -18,7 +21,7 @@ import ThreeDLayout from "~/components/three-d-layour.astro"
 					<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-full object-cover border-2 border-white -translate-x-4" />
 					<img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-full object-cover border-2 border-white -translate-x-8" />
 					<img src="https://images.unsplash.com/photo-1463453091185-61582044d556?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-full object-cover border-2 border-white -translate-x-12" />
-					<div class="-translate-x-8 text-xl">Engineer Pages (200)</div>
+					<div class="-translate-x-8 text-xl italic">Engineer Pages (200)</div>
 				</div>
 			</div>
 			<input class="rounded-md text-xl text-right focus:outline-none font-bold flex-1" placeholder="search..." />
@@ -26,29 +29,19 @@ import ThreeDLayout from "~/components/three-d-layour.astro"
 
 		<div class="grid grid-cols-4 gap-8">
 			{
-				[
-					'https://res.cloudinary.com/khaya-zulu/image/upload/v1673125950/Screenshot_2023-01-07_at_23.12.21_xfanic.png',
-					"/cassie.png", 
-					"/jason.png",
-					"/dana.png",
-					"/delba.png",
-					"/greg.png",
-					"/pedro.png",
-					"/rodrigo.png",
-					"/dax.png",
-					"/iheanyi.png",
-				].map((src, i) => (
+				pages.map((p) => (
 					<ThreeDLayout>
 						<div class="p-2 bg-zinc-800 rounded-lg shadow-inner">
+							{/* static noise filter https://css-tricks.com/making-static-noise-from-a-weird-css-gradient-bug/ */}
 							<img 
-								src={src}
+								src={p.imageUrl}
 								alt=""
-								class="h-36 w-full shadow-lg rounded-xl object-cover transition-transform grayscale-[0.6] group-hover:grayscale-0" />
+								class="h-36 w-full shadow-lg rounded-xl object-cover" />
 						</div>
 
 						<div class="p-2">
 							<div class="flex items-center gap-4 justify-between">
-								<div class="shadow-inner rounded-md my-2 text-zinc-50 py-1 px-2 text-sm border-2 border-zinc-800 inline-flex bg-gradient-to-tr from-zinc-800 to-zinc-700">upshot.dev</div>
+								<div class="shadow-inner rounded-md my-2 text-zinc-50 py-1 px-2 text-sm border-2 border-zinc-800 inline-flex bg-gradient-to-tr from-zinc-800 to-zinc-700">{p.url}</div>
 								<div class="flex gap-3 ml-2">
 									<div class="h-2 w-4 bg-yellow-200 rounded-sm" />
 									<div class="h-2 w-4 bg-green-200 rounded-sm" />
@@ -56,7 +49,7 @@ import ThreeDLayout from "~/components/three-d-layour.astro"
 							</div>
 
 							<div class="text-sm mb-8 text-zinc-50">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit
+								{p.description}
 							</div>
 
 							<div class="flex gap-2 items-center">
@@ -68,7 +61,7 @@ import ThreeDLayout from "~/components/three-d-layour.astro"
 									</div>										
 								</div>
 								<div class="text-sm opacity-40 text-white group-hover:opacity-100 duration-300 transition-opacity">
-									20 clicks
+									{p.clicks} clicks
 								</div>
 							</div>
 						</div>
