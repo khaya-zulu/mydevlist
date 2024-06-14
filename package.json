@@ -3,23 +3,28 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "wrangler types && astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/db": "^0.10.7",
+    "@astrojs/cloudflare": "^10.2.6",
+    "@astrojs/db": "^0.11.1",
     "@astrojs/tailwind": "5.1.0",
-    "astro": "4.7.1",
+    "astro": "4.8.3",
+    "miniflare": "^3.20240512.0",
     "tailwindcss": "3.4.3"
   },
   "devDependencies": {
     "@snaplet/copycat": "^5.0.0",
-    "@snaplet/seed": "0.97.6",
+    "@snaplet/seed": "0.97.15",
     "@types/better-sqlite3": "^7.6.10",
     "better-sqlite3": "^9.6.0",
-    "snaplet": "0.91.1"
+    "execa": "9.1.0",
+    "snaplet": "0.92.1",
+    "wrangler": "^3.56.0",
+    "miniflare": "^3.20240512.0"
   }
 }

@@ -4,7 +4,7 @@ const Page = defineTable({
   columns: {
     id: column.number({ primaryKey: true }),
     url: column.text(),
-    imageUrl: column.text(),
+    screenshotKey: column.text(),
     description: column.text(),
     createdAt: column.date({ default: new Date() }),
   },

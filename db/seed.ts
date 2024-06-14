@@ -1,6 +1,7 @@
-import { db } from "astro:db";
+import { $ } from "execa";
 
 // https://astro.build/db/seed
 export default async function seed() {
-  // TODO
+  console.log("🌱 seeding database using snaplet...");
+  await $`npx tsx root-seed.ts`;
 }

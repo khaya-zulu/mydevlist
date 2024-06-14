@@ -95,9 +95,9 @@
           "isId": false
         },
         {
-          "id": "Page.imageUrl",
-          "name": "imageUrl",
-          "columnName": "imageUrl",
+          "id": "Page.screenshotKey",
+          "name": "screenshotKey",
+          "columnName": "screenshotKey",
           "type": "text",
           "isRequired": true,
           "kind": "scalar",

@@ -4,7 +4,10 @@ import { db, Page, Click, eq, count } from "astro:db"
 import Layout from '~/layouts/Layout.astro';
 import ThreeDLayout from "~/components/three-d-layour.astro"
 
-const pages = await db.select({ url: Page.url, imageUrl: Page.imageUrl, description: Page.description, clicks: count(Click.id) }).from(Page).innerJoin(Click, eq(Page.id, Click.pageId)).groupBy(Page.id)
+const pages = await db.select({ url: Page.url, screenshotKey: Page.screenshotKey, description: Page.description, clicks: count(Click.id) })
+	.from(Page)
+	.innerJoin(Click, eq(Page.id, Click.pageId))
+	.groupBy(Page.id)
 ---
 
 <!-- todo: when a user hovers on a cover image, update the background image of the text.  -->
@@ -14,14 +17,14 @@ const pages = await db.select({ url: Page.url, imageUrl: Page.imageUrl, descript
 			<div class="flex-1 flex flex-col gap-4">
 				<div>
 					<div>mydevlist.com</div>
-					<h1 class="text-6xl font-bold py-2 bg-pattern bg-clip-text text-transparent">Dribble for developer landing pages.</h1>
+					<h1 class="text-6xl font-bold py-2 bg-gradient-to-tr from-black to-slate-500 bg-clip-text text-transparent">A list of developer landing website.</h1>
 				</div>
 				<div class="flex items-center">
-					<img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVvcGxlfGVufDB8fDB8fHww" alt="" class="h-10 w-10 rounded-full object-cover" />
-					<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-full object-cover border-2 border-white -translate-x-4" />
-					<img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-full object-cover border-2 border-white -translate-x-8" />
-					<img src="https://images.unsplash.com/photo-1463453091185-61582044d556?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-full object-cover border-2 border-white -translate-x-12" />
-					<div class="-translate-x-8 text-xl italic">Engineer Pages (200)</div>
+					<img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVvcGxlfGVufDB8fDB8fHww" alt="" class="h-10 w-10 rounded-lg object-cover" />
+					<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-4" />
+					<img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-8" />
+					<img src="https://images.unsplash.com/photo-1463453091185-61582044d556?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-12" />
+					<div class="-translate-x-8 text-xl italic">Pages ({pages.length})</div>
 				</div>
 			</div>
 			<input class="rounded-md text-xl text-right focus:outline-none font-bold flex-1" placeholder="search..." />
@@ -32,9 +35,10 @@ const pages = await db.select({ url: Page.url, imageUrl: Page.imageUrl, descript
 				pages.map((p) => (
 					<ThreeDLayout>
 						<div class="p-2 bg-zinc-800 rounded-lg shadow-inner">
-							{/* static noise filter https://css-tricks.com/making-static-noise-from-a-weird-css-gradient-bug/ */}
+							{/* static noise filter https://css-tricks.com/making-static-noise-from-a-weird-css-gradient-bug/
+							 https://css-tricks.com/grainy-gradients/ */}
 							<img 
-								src={p.imageUrl}
+								src={`/screenshot/${p.screenshotKey}`}
 								alt=""
 								class="h-36 w-full shadow-lg rounded-xl object-cover" />
 						</div>
