@@ -4,7 +4,7 @@ import { db, Page, Click, eq, count } from "astro:db"
 import Layout from '~/layouts/Layout.astro';
 import ThreeDLayout from "~/components/three-d-layour.astro"
 
-const pages = await db.select({ url: Page.url, screenshotKey: Page.screenshotKey, description: Page.description, clicks: count(Click.id) })
+const pages = await db.select({ id: Page.id, url: Page.url, screenshotKey: Page.screenshotKey, description: Page.description, clicks: count(Click.id) })
 	.from(Page)
 	.innerJoin(Click, eq(Page.id, Click.pageId))
 	.groupBy(Page.id)
@@ -34,39 +34,43 @@ const pages = await db.select({ url: Page.url, screenshotKey: Page.screenshotKey
 			{
 				pages.map((p) => (
 					<ThreeDLayout>
-						<div class="p-2 bg-zinc-800 rounded-lg shadow-inner">
-							{/* static noise filter https://css-tricks.com/making-static-noise-from-a-weird-css-gradient-bug/
-							 https://css-tricks.com/grainy-gradients/ */}
-							<img 
-								src={`/screenshot/${p.screenshotKey}`}
-								alt=""
-								class="h-36 w-full shadow-lg rounded-xl object-cover" />
-						</div>
-
-						<div class="p-2">
-							<div class="flex items-center gap-4 justify-between">
-								<div class="shadow-inner rounded-md my-2 text-zinc-50 py-1 px-2 text-sm border-2 border-zinc-800 inline-flex bg-gradient-to-tr from-zinc-800 to-zinc-700">{p.url}</div>
-								<div class="flex gap-3 ml-2">
-									<div class="h-2 w-4 bg-yellow-200 rounded-sm" />
-									<div class="h-2 w-4 bg-green-200 rounded-sm" />
-								</div>
+						<div class="flex flex-col h-full">
+							<div class="p-2 bg-zinc-800 rounded-lg shadow-inner">
+								{/* static noise filter https://css-tricks.com/making-static-noise-from-a-weird-css-gradient-bug/
+								https://css-tricks.com/grainy-gradients/ */}
+								<img 
+									src={`/screenshot/${p.screenshotKey}`}
+									alt=""
+									class="h-36 w-full shadow-lg rounded-xl object-cover" />
 							</div>
 
-							<div class="text-sm mb-8 text-zinc-50">
-								{p.description}
-							</div>
+							<div class="p-2 flex flex-col flex-1 justify-between">
+								<div>
+									<div class="flex items-center gap-4 justify-between">
+										<div class="shadow-inner rounded-md my-2 text-zinc-50 py-1 px-2 text-sm border-2 border-zinc-800 inline-flex bg-gradient-to-tr from-zinc-800 to-zinc-700">{p.url}</div>
+										<div class="flex gap-3 ml-2">
+											<div class="h-2 w-4 bg-yellow-200 rounded-sm" />
+											<div class="h-2 w-4 bg-green-200 rounded-sm" />
+										</div>
+									</div>
 
-							<div class="flex gap-2 items-center">
-								<div class="p-1 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-700 shadow-inner border-2 border-zinc-800">
-									<div class="p-2 bg-zinc-200 rounded-full shadow-inner">
-										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-											<path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-										</svg>
-									</div>										
+									<div class="text-sm mb-8 text-zinc-50">
+										{p.description}
+									</div>
 								</div>
-								<div class="text-sm opacity-40 text-white group-hover:opacity-100 duration-300 transition-opacity">
-									{p.clicks} clicks
-								</div>
+
+								<button class="flex gap-2 items-center" onclick={`onClick(${p.id}, '${p.url}')`}>
+									<div class="p-1 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-700 shadow-inner border-2 border-zinc-800">
+										<div class="p-2 bg-zinc-200 rounded-full shadow-inner">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+												<path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+											</svg>
+										</div>										
+									</div>
+									<div id={`${p.id}`} class="text-sm opacity-40 text-white group-hover:opacity-100 duration-300 transition-opacity">
+										{p.clicks} clicks
+									</div>
+								</button>
 							</div>
 						</div>
 					</ThreeDLayout>
@@ -75,3 +79,17 @@ const pages = await db.select({ url: Page.url, screenshotKey: Page.screenshotKey
 		</div>
 	</main>
 </Layout>
+
+<script>
+	(window as any as { onClick: (pageId: string, url: string) => void }).onClick = async (pageId, url) => {
+		fetch(`/click/${pageId}`).then(async (res) => {
+			const data = await res.json()
+			if (res.status === 200) {
+				const el = document.getElementById(pageId)
+				console.log('ddata')
+				if (el) el.innerHTML = `${data.count} clicks`
+			}
+		})
+		window.open(url, "_blank", "noopener,noreferrer")
+	}
+</script>
