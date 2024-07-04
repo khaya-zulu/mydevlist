@@ -18,17 +18,18 @@ const pages = await db.select({ id: Page.id, url: Page.url, screenshotKey: Page.
 			<div class="flex-1 flex flex-col gap-4">
 				<div>
 					<div>mydevlist.com</div>
-					<h1 class="text-6xl font-bold py-2 bg-gradient-to-tr from-black to-slate-500 bg-clip-text text-transparent">A list of developer landing website.</h1>
-				</div>
-				<div class="flex items-center">
-					<img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVvcGxlfGVufDB8fDB8fHww" alt="" class="h-10 w-10 rounded-lg object-cover" />
-					<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-4" />
-					<img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-8" />
-					<img src="https://images.unsplash.com/photo-1463453091185-61582044d556?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-12" />
-					<div class="-translate-x-8 text-xl italic">Pages ({pages.length})</div>
+					<div class="flex items-end overflow-hidden">
+						<h1 class="text-6xl font-bold bg-gradient-to-tr from-black to-slate-700 bg-clip-text text-transparent translate-y-2">A list of developer <br> landing website.</h1>
+						<span class="flex items-center translate-y-2">
+							<img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVvcGxlfGVufDB8fDB8fHww" alt="" class="h-10 w-10 rounded-lg object-cover transition hover:-translate-y-4 hover:rotate-12 hover:z-50" />
+							<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-4 transition hover:-translate-y-4 hover:rotate-12 hover:z-50" />
+							<img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-8 transition hover:-translate-y-4 hover:rotate-12 hover:z-50" />
+							<img src="https://images.unsplash.com/photo-1463453091185-61582044d556?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-12 transition hover:-translate-y-4 hover:rotate-12 hover:z-50" />
+						</span>
+					</div>
 				</div>
 			</div>
-			<input class="rounded-md text-xl text-right focus:outline-none font-bold flex-1" placeholder="search..." />
+			<!-- <input class="rounded-md text-xl text-right focus:outline-none font-bold flex-1" placeholder="search..." /> -->
 		</div>
 
 		<div class="grid grid-cols-4 gap-8">
