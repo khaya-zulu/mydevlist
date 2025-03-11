@@ -1,44 +1,59 @@
 ---
-import { db, Page, Click, eq, count } from "astro:db"
-
-import Layout from '~/layouts/Layout.astro';
+import Layout from '~/layouts/layout.astro';
 import ThreeDLayout from "~/components/three-d-layour.astro"
 import Image from "~/components/img.astro"
+import Search from "~/layouts/search.astro"
 
-const pages = await db.select({ id: Page.id, url: Page.url, screenshotKey: Page.screenshotKey, description: Page.description, clicks: count(Click.id) })
-	.from(Page)
-	.innerJoin(Click, eq(Page.id, Click.pageId))
-	.groupBy(Page.id)
+// const pages = await db.select({ id: Page.id, url: Page.url, screenshotKey: Page.screenshotKey, description: Page.description, clicks: count(Click.id) })
+// 	.from(Page)
+// 	.innerJoin(Click, eq(Page.id, Click.pageId))
+// 	.groupBy(Page.id)
+
+const pages = [
+	{
+		id: "1",
+		url: "gal.hagever.com",
+		screenshotKey: "https://images.unsplash.com/photo-1725161834485-58be3227a34c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8",
+		description: "A personal blog by Gal Schlezinger. Thoughts. Code. Whatever.",
+		clicks: 2
+	},
+	{
+		id: "2",
+		url: 'joshwcomeau.com',
+		screenshotKey: "https://images.unsplash.com/photo-1724747891638-68862b7b3165?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxOHx8fGVufDB8fHx8fA%3D%3D",
+		description: "Friendly tutorials for developers. Focus on React, CSS, Animation, and more!",
+		clicks: 5
+	},
+	{
+		id: "3",
+		url: 'jonasgalvez.com.br',
+		screenshotKey: "https://images.unsplash.com/photo-1724747891638-68862b7b3165?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxOHx8fGVufDB8fHx8fA%3D%3D",
+		description: "Friendly tutorials for developers. Focus on React, CSS, Animation, and more!",
+		clicks: 5
+	}
+]
 ---
 
 <!-- todo: when a user hovers on a cover image, update the background image of the text.  -->
 <Layout title="Welcome to Astro.">
 	<main class="max-w-6xl mx-auto py-10">
-		<div class="flex items-end mb-14 w-full mt-8">
-			<div class="flex-1 flex flex-col gap-4">
-				<div>
-					<div>mydevlist.com</div>
-					<div class="flex items-end overflow-hidden">
-						<h1 class="text-6xl font-bold bg-gradient-to-tr from-black to-slate-700 bg-clip-text text-transparent translate-y-2">A list of developer <br> landing website.</h1>
-						<span class="flex items-center translate-y-2">
-							<img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVvcGxlfGVufDB8fDB8fHww" alt="" class="h-10 w-10 rounded-lg object-cover transition hover:-translate-y-4 hover:rotate-12 hover:z-50" />
-							<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-4 transition hover:-translate-y-4 hover:rotate-12 hover:z-50" />
-							<img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-8 transition hover:-translate-y-4 hover:rotate-12 hover:z-50" />
-							<img src="https://images.unsplash.com/photo-1463453091185-61582044d556?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D" alt="" class="h-10 w-10 rounded-lg object-cover border-2 border-white -translate-x-12 transition hover:-translate-y-4 hover:rotate-12 hover:z-50" />
-						</span>
-					</div>
-				</div>
-			</div>
-			<!-- <input class="rounded-md text-xl text-right focus:outline-none font-bold flex-1" placeholder="search..." /> -->
+		<div class="mb-16 mt-10">
+			<h1 class="text-xl font-bold bg-gradient-to-tr from-black to-cyan-700 bg-clip-text text-transparent max-w-2xl mb-4">
+				Hi there <span class="text-black">👋</span>, My name <i class="underline decoration-wavy">Khaya</i>
+				<br /><br>
+				For the past three years I've been building <br> up a list of engineers, this is it. Please
+				find
+			</h1>
+			<Search />
 		</div>
 
-		<div class="grid grid-cols-4 gap-8">
+		<div class="grid grid-cols-4 gap-8 mt-8">
 			{
-				pages.map((p) => (
+				[...pages, ...pages].map((p) => (
 					<ThreeDLayout>
 						<div class="flex flex-col h-full">
 							<div class="p-2 bg-zinc-800 rounded-lg shadow-inner">
-								<Image src={`/screenshot/${p.screenshotKey}`} alt={`${p.url} screenshot`} />
+								<Image src={p.screenshotKey} alt={`${p.url} screenshot`} />
 							</div>
 
 							<div class="p-2 flex flex-col flex-1 justify-between">

@@ -12,10 +12,10 @@
         "confidenceContext": 0
       },
       {
-        "input": " page image_url",
-        "column": "imageUrl",
-        "shape": "IMAGE_URL",
-        "confidence": 0.9593562483787537,
+        "input": " page screenshot_key",
+        "column": "screenshotKey",
+        "shape": "TOKEN",
+        "confidence": 0.8961784839630127,
         "context": "GENERAL",
         "confidenceContext": 0
       },

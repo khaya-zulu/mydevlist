@@ -10,21 +10,21 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^10.2.6",
-    "@astrojs/db": "^0.11.1",
+    "@astrojs/cloudflare": "^11.0.4",
+    "@astrojs/db": "^0.13.2",
     "@astrojs/tailwind": "5.1.0",
-    "astro": "4.8.3",
+    "astro": "4.14.5",
     "miniflare": "^3.20240512.0",
     "tailwindcss": "3.4.3"
   },
   "devDependencies": {
-    "@snaplet/copycat": "^5.0.0",
-    "@snaplet/seed": "0.97.15",
+    "@snaplet/copycat": "5.0.0",
+    "@snaplet/seed": "0.98.0",
     "@types/better-sqlite3": "^7.6.10",
     "better-sqlite3": "^9.6.0",
     "execa": "9.1.0",
+    "miniflare": "^3.20240512.0",
     "snaplet": "0.92.1",
-    "wrangler": "^3.56.0",
-    "miniflare": "^3.20240512.0"
+    "wrangler": "^3.56.0"
   }
 }

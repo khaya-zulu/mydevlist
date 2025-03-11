@@ -11,7 +11,7 @@ const { src, alt } = Astro.props
     <img 
         src={src}
         alt={alt}
-        class="w-full object-cover " />
+        class="w-full object-cover box-shadow" />
 
     <div class="absolute top-0 left-0 h-full w-full opacity-35 group-hover:opacity-0 transition-opacity duration-500">
         <div class="isolate relative h-full w-full">
@@ -31,7 +31,7 @@ const { src, alt } = Astro.props
 
     .overlay {
         /* ... */
-        background: moccasin;
+        background: #c6c6c6;
         mix-blend-mode: multiply;
     }
 </style>

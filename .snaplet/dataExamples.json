@@ -1,5 +1,9 @@
 [
   {
+    "shape": "TOKEN",
+    "examples": []
+  },
+  {
     "shape": "IMAGE_URL",
     "examples": [
       "https://loremflickr.com/640/480"
@@ -83,6 +87,49 @@
       "Network engineer optimizing network performance for seamless connectivity",
       "AI specialist developing intelligent algorithms for automation",
       "Software consultant providing expert advice on application development"
+    ]
+  },
+  {
+    "input": " page screenshot_key",
+    "examples": [
+      "page-home-1234567890",
+      "screenshot-landing-page-v2",
+      "about-us-2022-summer-sale",
+      "contact-us-form-mobile-001",
+      "features-hero-section-desktop",
+      "pricing-plan-annual-discount",
+      "blog-post-1-featured-image",
+      "footer-section-2022-q2",
+      "header-logo-2022-refresh",
+      "team-member-john-doe-001",
+      "faq-section-accordion-001",
+      "features-section-grid-002",
+      "hero-section-video-poster",
+      "testimonial-section-carousel-001",
+      "product-detail-page-gallery-001",
+      "category-page-list-view",
+      "search-results-page-grid-002",
+      "footer-section-social-links-001",
+      "header-navigation-dropdown-001",
+      "blog-post-2-featured-image-mobile",
+      "features-section-list-view-001",
+      "pricing-plan-monthly-basic",
+      "about-us-hero-section-2022",
+      "contact-us-form-desktop-002",
+      "team-member-jane-doe-002",
+      "faq-section-accordion-002",
+      "features-section-grid-003",
+      "hero-section-video-thumbnail",
+      "testimonial-section-grid-001",
+      "product-detail-page-video-poster",
+      "category-page-grid-view",
+      "search-results-page-list-002",
+      "footer-section-copyright-001",
+      "header-logo-2022-old-version",
+      "blog-post-3-featured-image-desktop",
+      "features-section-list-view-002",
+      "pricing-plan-annually-pro",
+      "about-us-team-section-2022"
     ]
   },
   {
