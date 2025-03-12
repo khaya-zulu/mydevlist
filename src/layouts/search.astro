@@ -7,13 +7,12 @@ import SearchIcon from "~/components/icons/search.astro"
 <div class="rounded-2xl bg-zinc-800 inline-flex flex-col gap-2 shadow-2xl border-2 border-zinc-700">
     <div class="flex px-6 py-3 border-b-2 border-zinc-700 gap-4 items-center">
         <SearchIcon className="w-4 h-4 text-white" />
-        <input type="text" placeholder="Search" class="bg-transparent w-full outline-none text-white" />
+        <input type="text" placeholder="Search" class="bg-transparent w-full outline-none text-cyan-100 flex-1" />
+
+        <div class="text-zinc-300 pl-4 border-l-2 border-zinc-700">125</div>
     </div>
 
     <div class="flex gap-2 justify-center mx-2 mb-2">
-        <button class="shadow-lg text-white py-1 px-4 rounded-lg box-shadow border-2 border-zinc-700">
-            Built with BuildShip
-        </button>
         <button class="shadow-lg text-white py-1 px-3 rounded-lg box-shadow border-2 border-zinc-700 flex gap-3 items-center">
             <ArticleIcon className="w-4 h-4" />
             Article
@@ -21,6 +20,9 @@ import SearchIcon from "~/components/icons/search.astro"
         <button class="shadow-lg text-white py-1 px-3 rounded-lg items-center box-shadow border-2 border-zinc-700 flex gap-3">
             <YoutubeIcon className="w-4 h-4" />
             Video
+        </button>
+        <button class="shadow-lg text-white py-1 px-4 rounded-lg box-shadow border-2 border-zinc-700">
+            Built with BuildShip
         </button>
     </div>
 </div>
