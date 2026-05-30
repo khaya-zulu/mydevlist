@@ -5,7 +5,7 @@ const Polaroid = () => {
   return (
     <div>
       <div className="bg-white p-4 rounded-lg shadow-xs flex flex-col gap-4 outline outline-neutral-200/40">
-        <div className="font-semibold">Logan Liffick 🇿🇦</div>
+        <div className="font-bold">Logan Liffick 🇿🇦</div>
         <div className="relative">
           <img
             src="/example.png"
@@ -34,6 +34,7 @@ export const Home = () => {
       </div>
       <div className="flex-1 h-full flex gap-4 py-10">
         <div className="flex-1 flex flex-col gap-4">
+          <Polaroid />
           <Polaroid />
           <Polaroid />
         </div>

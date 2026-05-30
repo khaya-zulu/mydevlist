@@ -22,7 +22,9 @@
     "types": "tsc"
   },
   "dependencies": {
+    "@browserbasehq/stagehand": "^3.4.0",
     "@tailwindcss/vite": "^4.3.0",
+    "agents": "^0.13.3",
     "clsx": "^2.1.1",
     "cobe": "^2.0.1",
     "motion": "^12.40.0",

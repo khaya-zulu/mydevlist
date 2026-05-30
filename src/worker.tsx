@@ -5,6 +5,8 @@ import { Document } from "@/app/document";
 import { setCommonHeaders } from "@/app/headers";
 import { Home } from "@/app/pages/home";
 
+export { DevAgent } from "@/app/agents/dev";
+
 export type AppContext = {};
 
 export default defineApp([
