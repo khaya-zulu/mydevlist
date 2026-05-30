@@ -39,7 +39,8 @@ export const Dev = async ({ params }: RequestInfo) => {
 
       <div className="max-w-5xl mx-auto -translate-y-32">
         <img
-          src={`/screenshots/${slug}`}
+          // src={`/screenshots/${slug}`}
+          src="/example.png"
           alt={developer.name ?? slug}
           className="w-full h-auto"
         />

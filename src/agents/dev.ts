@@ -56,7 +56,8 @@ export class DevAgent extends Agent {
 
     const { output } = await generateText({
       model: openai("gpt-5.5"),
-      system: `You are a helpful assistant that summarises the developer's portfolio website.`,
+      system:
+        "You are a helpful assistant that summarises the developer's portfolio website.",
       output: Output.object({
         schema: z.object({
           name: z.string().describe("The developer's full name."),
@@ -114,6 +115,10 @@ export class DevAgent extends Agent {
       .from(crawledLinks)
       .orderBy(desc(crawledLinks.crawledAt));
 
-    return { developer: dev ?? null, socialLinks: socials, crawledLinks: links };
+    return {
+      developer: dev ?? null,
+      socialLinks: socials,
+      crawledLinks: links,
+    };
   }
 }

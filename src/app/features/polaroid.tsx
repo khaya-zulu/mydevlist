@@ -28,7 +28,8 @@ export const Polaroid = ({
     >
       <div className="relative">
         <img
-          src={`/screenshots/${dev.slug}`}
+          // src={`/screenshots/${dev.slug}`}
+          src="/example.png"
           alt={dev.name ?? dev.slug}
           className="h-64 w-full object-cover bg-neutral-100"
         />
