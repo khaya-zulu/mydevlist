@@ -5,12 +5,20 @@ const Polaroid = () => {
   return (
     <div>
       <div className="bg-white p-4 rounded-lg shadow-xs flex flex-col gap-4 outline outline-neutral-200/40">
-        <div className="font-bold">Logan Liffick 🇿🇦</div>
+        <div className="flex gap-1.5 items-center">
+          <svg
+            className="size-2 bg-teal-400 rounded-full"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          />
+          <div className="font-bold">Logan Liffick 🇿🇦</div>
+        </div>
         <div className="relative">
           <img
             src="/example.png"
             alt="WorkNest"
-            className="h-64 rounded-md object-cover"
+            className="h-64 rounded-lg object-cover"
           />
 
           <div className="absolute bottom-5 right-5 text-xs bg-white rounded-2xl px-3 py-1.5">
