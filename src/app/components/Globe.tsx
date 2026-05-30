@@ -182,6 +182,10 @@ export const Globe = () => {
           <span className="showcase-polaroid-caption">{m.caption}</span>
         </div>
       ))}
+
+      <div className="absolute -bottom-10 left-0 w-full text-center flex gap-2 justify-center text-cyan-800">
+        <a href="">Github</a>/<a href="/">@upshot_dev</a>
+      </div>
     </div>
   );
 };
