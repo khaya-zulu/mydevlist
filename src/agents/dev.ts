@@ -10,7 +10,7 @@ import {
   type DataDb,
 } from "@/db/data";
 import { controlDb, sites } from "@/db/control";
-import { generateText, Output } from "ai";
+import { generateImage, generateText, Output } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { desc, eq } from "drizzle-orm";
 import z from "zod";
@@ -31,17 +31,26 @@ export class DevAgent extends Agent {
   async onboard(input: { url: string; slug: string }) {
     const { url, slug } = input;
 
-    let isScreenshotSaved = false;
-
     const bio = await executeBrowserAgent({
       prompt: `Learn about the developer and their portfolio website at ${url}. Visit the site, explore relevant sub pages, and summarise who the developer is and what they work on.`,
       hooks: {
-        // Save only the first screenshot, keyed by the developer's slug.
         onTakeScreenshot: async ({ screenshot }) => {
-          if (isScreenshotSaved) return;
-          isScreenshotSaved = true;
-
+          // Save the original screenshot.
           await this.env.SCREENSHOTS.put(slug, screenshot, {
+            httpMetadata: { contentType: "image/png" },
+          });
+
+          // Generate a digital version from the original and save it alongside
+          // (served at /screenshots/<slug>/digital).
+          const { image } = await generateImage({
+            model: openai.image("gpt-image-1"),
+            prompt: {
+              images: [screenshot],
+              text: "Can I have a digital pixelated version of this?",
+            },
+          });
+
+          await this.env.SCREENSHOTS.put(`${slug}/digital`, image.uint8Array, {
             httpMetadata: { contentType: "image/png" },
           });
         },

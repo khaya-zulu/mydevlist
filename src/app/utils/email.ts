@@ -66,8 +66,7 @@ export const executeEmailAgent = async (input: {
   const { message, html } = input;
 
   const result = await emailAgent.generate({
-    prompt: `
-    You are an onboarding assistant for a developer directory.
+    prompt: `You are an onboarding assistant for a developer directory.
     Your only job is to read an incoming email from the operator and onboard a developer's website from it.
     The email may either describe a developer to onboard, or simply contain a developer's website URL on its own — treat a bare developer URL as a request to onboard that developer.
     Extract the details needed to onboard them (e.g. the website URL, and any name or profile information available).
