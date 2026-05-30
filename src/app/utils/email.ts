@@ -5,6 +5,9 @@ import { createMimeMessage } from "mimetext";
 import z from "zod";
 import { env } from "cloudflare:workers";
 
+import { controlDb, sites } from "@/db/control";
+import { eq } from "drizzle-orm";
+
 export const createReplyMessage = (input: {
   message: ForwardableEmailMessage;
   to: string;
@@ -31,13 +34,26 @@ const emailAgent = new ToolLoopAgent({
       description: "Onboard a developer from an email",
       inputSchema: z.object({
         pageUrl: z.url().describe("The URL of the developer's website"),
+        slug: z.string().describe("The slug of the developer"),
       }),
-      execute: async ({ pageUrl }) => {
+      execute: async ({ pageUrl, slug }) => {
         console.log("ONBOARDING DEVELOPER", pageUrl);
-        const stub = await env.DevAgent.getByName(pageUrl);
-        await stub.onboard({ url: pageUrl });
 
-        return "Started onboarding developer";
+        const [existingSite] = await controlDb
+          .select()
+          .from(sites)
+          .where(eq(sites.slug, slug));
+
+        if (existingSite) {
+          return "Site already exists";
+        } else {
+          await controlDb.insert(sites).values({ slug, url: pageUrl });
+
+          const stub = await env.DevAgent.getByName(slug);
+          await stub.onboard({ url: pageUrl, slug });
+
+          return "Started onboarding developer";
+        }
       },
     }),
   },
@@ -70,7 +86,7 @@ export const executeEmailAgent = async (input: {
   return createReplyMessage({
     message: message,
     to: message.from,
-    subject: "Error processing email",
+    subject: "Completed onboarding",
     body: result.text,
   });
 };

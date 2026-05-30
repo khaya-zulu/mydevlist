@@ -5,7 +5,22 @@ import { launch, type Page } from "@cloudflare/playwright";
 import z from "zod";
 import { env } from "cloudflare:workers";
 
-const createBrowserTools = (page: Page) => ({
+export type BrowserLink = { text: string; href: string };
+
+export type BrowserHooks = {
+  onGoToPage?: (event: { url: string; title: string }) => void | Promise<void>;
+  onReadPage?: (event: { url: string; text: string }) => void | Promise<void>;
+  onGetLinks?: (event: {
+    url: string;
+    links: BrowserLink[];
+  }) => void | Promise<void>;
+  onTakeScreenshot?: (event: {
+    url: string;
+    screenshot: Buffer<ArrayBufferLike>;
+  }) => void | Promise<void>;
+};
+
+const createBrowserTools = (page: Page, hooks: BrowserHooks = {}) => ({
   goToPage: tool({
     description:
       "Navigate the browser to a URL. Use this to visit a developer's website or one of its sub pages.",
@@ -15,7 +30,11 @@ const createBrowserTools = (page: Page) => ({
     execute: async ({ url }) => {
       console.log("GOING TO PAGE", url);
       await page.goto(url, { waitUntil: "domcontentloaded" });
-      return `Navigated to ${page.url()} — "${await page.title()}"`;
+      const title = await page.title();
+
+      await hooks.onGoToPage?.({ url: page.url(), title });
+
+      return `Navigated to ${page.url()} — "${title}"`;
     },
   }),
 
@@ -26,8 +45,13 @@ const createBrowserTools = (page: Page) => ({
     execute: async () => {
       console.log("READING PAGE");
       const text = await page.evaluate(() => document.body.innerText);
-      // Keep the payload reasonable for the model.
-      return text.slice(0, 20_000);
+      const trimmed = text.slice(0, 20_000);
+
+      const screenshot = await page.screenshot();
+      await hooks.onTakeScreenshot?.({ url: page.url(), screenshot });
+
+      await hooks.onReadPage?.({ url: page.url(), text: trimmed });
+      return trimmed;
     },
   }),
 
@@ -46,28 +70,18 @@ const createBrowserTools = (page: Page) => ({
           .filter((l) => l.href.startsWith("http")),
       );
 
-      return JSON.stringify(links.slice(0, 100));
+      const limited = links.slice(0, 100);
+      await hooks.onGetLinks?.({ url: page.url(), links: limited });
+      return JSON.stringify(limited);
     },
   }),
-
-  // takeScreenshot: tool({
-  //   description:
-  //     "Take a screenshot of the current page, returned as a base64-encoded PNG.",
-  //   inputSchema: z.object({
-  //     fullPage: z
-  //       .boolean()
-  //       .optional()
-  //       .describe("Capture the full scrollable page instead of the viewport"),
-  //   }),
-  //   execute: async ({ fullPage }) => {
-  //     const buffer = await page.screenshot({ fullPage: fullPage ?? false });
-  //     return buffer.toString("base64");
-  //   },
-  // }),
 });
 
-export const executeBrowserAgent = async (input: { prompt: string }) => {
-  const { prompt } = input;
+export const executeBrowserAgent = async (input: {
+  prompt: string;
+  hooks?: BrowserHooks;
+}) => {
+  const { prompt, hooks } = input;
 
   const browser = await launch(env.BROWSER);
 
@@ -76,7 +90,7 @@ export const executeBrowserAgent = async (input: { prompt: string }) => {
 
     const browserAgent = new ToolLoopAgent({
       model: openai("gpt-5.5"),
-      tools: createBrowserTools(page),
+      tools: createBrowserTools(page, hooks),
     });
 
     const result = await browserAgent.generate({

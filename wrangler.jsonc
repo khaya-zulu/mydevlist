@@ -32,6 +32,34 @@
     // Add your environment variables here
   },
 
+  // Control plane: shared D1 database (Drizzle client in src/db/control)
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mydevlist-db",
+      "database_id": "6a4820be-6fc8-4cc5-ba91-7d6e4b03be0e",
+      "migrations_dir": "src/db/control/migrations",
+    },
+  ],
+
+  // R2 bucket for developer screenshots, keyed by slug.
+  "r2_buckets": [
+    {
+      "binding": "SCREENSHOTS",
+      "bucket_name": "mydevlist-screenshots",
+    },
+  ],
+
+  // Allow importing generated .sql migrations as text so each DevAgent
+  // can run its own data-plane migrations (src/db/data/migrations).
+  "rules": [
+    {
+      "type": "Text",
+      "globs": ["**/*.sql"],
+      "fallthrough": true,
+    },
+  ],
+
   // Durable Objects
   "durable_objects": {
     "bindings": [
