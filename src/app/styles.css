@@ -1,1 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=DotGothic16&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap");
+
 @import "tailwindcss";
+
+body {
+  @apply text-sm;
+  font-family: "Google Sans Flex", sans-serif;
+}
+
+.text-dot-gothic-16 {
+  font-family: "DotGothic16", sans-serif;
+}
+
+.showcase-polaroid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 96px;
+  padding: 6px 6px 22px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.18),
+    0 1px 3px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  will-change: transform, opacity;
+  transform: translate(-50%, -50%);
+}
+
+.showcase-polaroid img {
+  display: block;
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 1px;
+  background: #eee;
+}
+
+.showcase-polaroid-caption {
+  display: block;
+  margin-top: 6px;
+  text-align: center;
+  font-family:
+    "Caveat", "Segoe Print", "Bradley Hand", cursive, system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  color: #333;
+}
