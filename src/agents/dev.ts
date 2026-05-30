@@ -6,12 +6,13 @@ import {
   migrateDataDb,
   crawledLinks,
   developer,
+  socialLinks,
   type DataDb,
 } from "@/db/data";
 import { controlDb, sites } from "@/db/control";
 import { generateText, Output } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import z from "zod";
 
 export class DevAgent extends Agent {
@@ -59,6 +60,12 @@ export class DevAgent extends Agent {
       output: Output.object({
         schema: z.object({
           name: z.string().describe("The developer's full name."),
+          role: z
+            .string()
+            .describe(
+              "The developer's single, short job title — at most 3 words, no slashes or combined roles. E.g. 'Design Engineer', 'Frontend Developer', 'Software Engineer'. " +
+                "For a prominent leadership role at a notable company (e.g. founder or C-level such as CEO/CTO), append the company in parentheses, e.g. 'CEO (Shopify)', 'CTO (Vercel)'.",
+            ),
           summary: z
             .string()
             .describe(
@@ -74,17 +81,18 @@ export class DevAgent extends Agent {
       ],
     });
 
-    const { name, summary } = output;
+    const { name, role, summary } = output;
 
     await this.db
       .insert(developer)
-      .values({ website: url, bio, name, summary })
+      .values({ website: url, bio, name, role, summary })
       .onConflictDoUpdate({
         target: developer.id,
         set: {
           website: url,
           bio,
           name,
+          role,
           summary,
           updatedAt: new Date(),
         },
@@ -92,9 +100,20 @@ export class DevAgent extends Agent {
 
     await controlDb
       .update(sites)
-      .set({ status: "ready", updatedAt: new Date() })
+      .set({ status: "ready", name, role, updatedAt: new Date() })
       .where(eq(sites.slug, slug));
 
     return bio;
+  }
+
+  async getProfile() {
+    const [dev] = await this.db.select().from(developer).limit(1);
+    const socials = await this.db.select().from(socialLinks);
+    const links = await this.db
+      .select()
+      .from(crawledLinks)
+      .orderBy(desc(crawledLinks.crawledAt));
+
+    return { developer: dev ?? null, socialLinks: socials, crawledLinks: links };
   }
 }

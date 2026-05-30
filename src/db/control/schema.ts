@@ -7,6 +7,8 @@ export const sites = sqliteTable("sites", {
     .$defaultFn(() => crypto.randomUUID()),
   slug: text("slug").notNull().unique(),
   url: text("url").notNull(),
+  name: text("name"),
+  role: text("role"),
   status: text("status", {
     enum: ["pending", "ready", "visible"],
   })

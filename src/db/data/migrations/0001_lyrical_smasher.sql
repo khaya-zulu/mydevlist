@@ -1,0 +1,1 @@
+ALTER TABLE `developer` RENAME COLUMN `headline` TO `role`;

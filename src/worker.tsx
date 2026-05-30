@@ -3,7 +3,7 @@ import { defineApp } from "rwsdk/worker";
 
 import { Document } from "@/app/document";
 import { setCommonHeaders } from "@/app/headers";
-import { WorkerEntrypoint } from "cloudflare:workers";
+import { WorkerEntrypoint, env } from "cloudflare:workers";
 import * as PostalMime from "postal-mime";
 
 import { generateText } from "ai";
@@ -24,6 +24,17 @@ const app = defineApp([
     // setup ctx here
     ctx;
   },
+  route("/screenshots/*", async ({ params }) => {
+    const object = await env.SCREENSHOTS.get(params.$0);
+    if (object === null) {
+      return new Response("Object Not Found", { status: 404 });
+    }
+    return new Response(object.body, {
+      headers: {
+        "Content-Type": object.httpMetadata?.contentType ?? "image/png",
+      },
+    });
+  }),
   render(Document, [route("/", Home), route("/:devId", Dev)]),
 ]);
 
@@ -59,4 +70,4 @@ export default class DefaultWorker extends WorkerEntrypoint<Env> {
   }
 }
 
-export { DevAgent } from "@/app/agents/dev";
+export { DevAgent } from "@/agents/dev";

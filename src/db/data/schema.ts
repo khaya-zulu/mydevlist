@@ -4,7 +4,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 export const developer = sqliteTable("developer", {
   id: text("id").primaryKey().default("developer"),
   name: text("name"),
-  headline: text("headline"),
+  role: text("role"),
   bio: text("bio"),
   website: text("website"),
   summary: text("summary"),

@@ -41,6 +41,7 @@
     "postal-mime": "^2.7.4",
     "react": "19.2.6",
     "react-dom": "19.2.6",
+    "react-markdown": "^10.1.0",
     "react-server-dom-webpack": "19.2.6",
     "rwsdk": "1.2.9",
     "tailwind-merge": "^3.6.0",

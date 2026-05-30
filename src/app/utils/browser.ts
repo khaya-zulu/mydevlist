@@ -1,4 +1,4 @@
-import { tool, ToolLoopAgent } from "ai";
+import { tool, ToolLoopAgent, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
 
 import { launch, type Page } from "@cloudflare/playwright";
@@ -20,62 +20,70 @@ export type BrowserHooks = {
   }) => void | Promise<void>;
 };
 
-const createBrowserTools = (page: Page, hooks: BrowserHooks = {}) => ({
-  goToPage: tool({
-    description:
-      "Navigate the browser to a URL. Use this to visit a developer's website or one of its sub pages.",
-    inputSchema: z.object({
-      url: z.url().describe("The absolute URL to navigate to"),
+const createBrowserTools = (page: Page, hooks: BrowserHooks = {}) => {
+  let isFirstPageRead = true;
+
+  return {
+    goToPage: tool({
+      description:
+        "Navigate the browser to a URL. Use this to visit a developer's website or one of its sub pages.",
+      inputSchema: z.object({
+        url: z.url().describe("The absolute URL to navigate to"),
+      }),
+      execute: async ({ url }) => {
+        console.log("GOING TO PAGE", url);
+        await page.goto(url, { waitUntil: "domcontentloaded" });
+        const title = await page.title();
+
+        await hooks.onGoToPage?.({ url: page.url(), title });
+
+        return `Navigated to ${page.url()} — "${title}"`;
+      },
     }),
-    execute: async ({ url }) => {
-      console.log("GOING TO PAGE", url);
-      await page.goto(url, { waitUntil: "domcontentloaded" });
-      const title = await page.title();
 
-      await hooks.onGoToPage?.({ url: page.url(), title });
+    readPage: tool({
+      description:
+        "Read the current page's visible text content. Use this to learn about the developer from the page you are on.",
+      inputSchema: z.object({}),
+      execute: async () => {
+        console.log("READING PAGE");
+        const text = await page.evaluate(() => document.body.innerText);
+        const trimmed = text.slice(0, 20_000);
 
-      return `Navigated to ${page.url()} — "${title}"`;
-    },
-  }),
+        if (isFirstPageRead) {
+          const screenshot = await page.screenshot();
+          await hooks.onTakeScreenshot?.({ url: page.url(), screenshot });
 
-  readPage: tool({
-    description:
-      "Read the current page's visible text content. Use this to learn about the developer from the page you are on.",
-    inputSchema: z.object({}),
-    execute: async () => {
-      console.log("READING PAGE");
-      const text = await page.evaluate(() => document.body.innerText);
-      const trimmed = text.slice(0, 20_000);
+          isFirstPageRead = false;
+        }
 
-      const screenshot = await page.screenshot();
-      await hooks.onTakeScreenshot?.({ url: page.url(), screenshot });
+        await hooks.onReadPage?.({ url: page.url(), text: trimmed });
+        return trimmed;
+      },
+    }),
 
-      await hooks.onReadPage?.({ url: page.url(), text: trimmed });
-      return trimmed;
-    },
-  }),
+    getLinks: tool({
+      description:
+        "List the links on the current page. Use this to discover sub pages of the site worth visiting (e.g. about, projects, blog).",
+      inputSchema: z.object({}),
+      execute: async () => {
+        console.log("GETTING LINKS");
+        const links = await page.evaluate(() =>
+          Array.from(document.querySelectorAll("a[href]"))
+            .map((a) => ({
+              text: (a.textContent ?? "").trim().slice(0, 120),
+              href: (a as HTMLAnchorElement).href,
+            }))
+            .filter((l) => l.href.startsWith("http")),
+        );
 
-  getLinks: tool({
-    description:
-      "List the links on the current page. Use this to discover sub pages of the site worth visiting (e.g. about, projects, blog).",
-    inputSchema: z.object({}),
-    execute: async () => {
-      console.log("GETTING LINKS");
-      const links = await page.evaluate(() =>
-        Array.from(document.querySelectorAll("a[href]"))
-          .map((a) => ({
-            text: (a.textContent ?? "").trim().slice(0, 120),
-            href: (a as HTMLAnchorElement).href,
-          }))
-          .filter((l) => l.href.startsWith("http")),
-      );
-
-      const limited = links.slice(0, 100);
-      await hooks.onGetLinks?.({ url: page.url(), links: limited });
-      return JSON.stringify(limited);
-    },
-  }),
-});
+        const limited = links.slice(0, 100);
+        await hooks.onGetLinks?.({ url: page.url(), links: limited });
+        return JSON.stringify(limited);
+      },
+    }),
+  };
+};
 
 export const executeBrowserAgent = async (input: {
   prompt: string;
@@ -91,6 +99,7 @@ export const executeBrowserAgent = async (input: {
     const browserAgent = new ToolLoopAgent({
       model: openai("gpt-5.5"),
       tools: createBrowserTools(page, hooks),
+      stopWhen: stepCountIs(40),
     });
 
     const result = await browserAgent.generate({
@@ -98,11 +107,23 @@ export const executeBrowserAgent = async (input: {
       Use the provided tools to visit the site, read its pages, discover and visit relevant sub pages (e.g. about, projects, blog), and take screenshots when useful.
       Only navigate within the site you were asked about. Do not follow unrelated external links.
 
+      You have a limited budget of tool calls. Be efficient: visit a handful of the most relevant pages rather than exhausting every link. Aim to finish exploring within roughly 30 tool calls so you always have room to write your answer.
+
       Here is the request:
       ${prompt}
 
-      Gather what you learn and return it as the answer to the request.`,
+      When you have gathered enough, STOP calling tools and reply with a written summary as your final message. Your final response must be the prose answer to the request — never end on a tool call.`,
     });
+
+    console.log(
+      "BROWSER AGENT RESULT",
+      "steps:",
+      result.steps.length,
+      "finishReason:",
+      result.finishReason,
+      "textLength:",
+      result.text.length,
+    );
 
     return result.text;
   } finally {
