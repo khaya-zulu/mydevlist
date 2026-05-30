@@ -43,7 +43,7 @@ export class DevAgent extends Agent {
           // Generate a digital version from the original and save it alongside
           // (served at /screenshots/<slug>/digital).
           const { image } = await generateImage({
-            model: openai.image("gpt-image-1"),
+            model: openai.image("gpt-image-2"),
             prompt: {
               images: [screenshot],
               text: "Can I have a digital pixelated version of this?",

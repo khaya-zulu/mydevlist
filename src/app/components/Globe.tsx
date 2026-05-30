@@ -153,10 +153,7 @@ export const Globe = () => {
   }, []);
 
   return (
-    <div
-      className="relative z-10 translate-y-56"
-      style={{ width: SIZE, height: SIZE }}
-    >
+    <div className="relative z-10" style={{ width: SIZE, height: SIZE }}>
       <canvas
         id="cobe"
         ref={canvasRef}
