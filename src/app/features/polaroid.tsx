@@ -24,12 +24,8 @@ export const Polaroid = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
       whileHover={{ y: -4 }}
-      className="bg-white p-4 flex flex-col gap-4 outline outline-neutral-200"
+      className="bg-white p-4 flex flex-col gap-4 border border-neutral-200/50 rounded-md"
     >
-      <div className="flex gap-1.5 items-center">
-        <span className="size-2 bg-teal-400" />
-        <div className="font-bold">{dev.name ?? displayUrl}</div>
-      </div>
       <div className="relative">
         <img
           src={`/screenshots/${dev.slug}`}
@@ -41,7 +37,10 @@ export const Polaroid = ({
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <div>{dev.role ?? "Developer"}</div>
+        <div>
+          <div className="font-semibold">{dev.name ?? displayUrl}</div>
+          <div className="font-instrument">{dev.role ?? "Developer"}</div>
+        </div>
         <ArrowUpRightIcon size={18} />
       </div>
     </motion.a>

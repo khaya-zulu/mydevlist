@@ -1,11 +1,33 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap");
 
 @import "tailwindcss";
 
 body {
   @apply text-sm;
   font-family: "Geist Mono", sans-serif;
+}
+
+.font-instrument {
+  @apply font-[400];
+  font-family: "Instrument Serif", serif;
+}
+
+/* The texture lives on an oversized, rotated layer behind the content.
+   background-image can't be rotated directly, so we rotate this layer
+   instead and oversize it (200% / -50%) so the viewport stays covered. */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
   background-image: url("https://www.transparenttextures.com/patterns/subtle-stripes.png");
+  transform: rotate(90deg);
+  transform-origin: center;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.3;
 }
 
 .showcase-polaroid {

@@ -16,15 +16,15 @@ export const DevList = async () => {
     .orderBy(desc(sites.requestedAt));
 
   return (
-    <div className="flex-1 h-full flex py-10">
-      <div className="flex-1 flex flex-col">
+    <div className="flex-1 h-full flex py-10 gap-4">
+      <div className="flex-1 flex flex-col gap-4">
         {devs
           .filter((_, i) => i % 2 === 0)
           .map((dev, i) => (
             <Polaroid key={dev.slug} dev={dev} index={i * 2} />
           ))}
       </div>
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col gap-4">
         {devs
           .filter((_, i) => i % 2 === 1)
           .map((dev, i) => (

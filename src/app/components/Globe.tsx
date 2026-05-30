@@ -75,14 +75,14 @@ export const Globe = () => {
       height: SIZE,
       phi: 0,
       theta: THETA,
-      dark: 0,
-      diffuse: 0.9,
+      dark: 1,
+      diffuse: 0.4,
       scale: 1,
       mapSamples: 16000,
-      mapBrightness: 6,
-      baseColor: [0.95, 0.95, 0.95],
+      mapBrightness: 12,
+      baseColor: [0.08, 0.08, 0.08],
       markerColor: [1, 0.35, 0.65],
-      glowColor: [1, 1, 1],
+      glowColor: [0, 0, 0],
       offset: [0, 0],
       markerElevation: MARKER_ELEVATION,
       markers: polaroidMarkers.map((m) => ({
@@ -153,7 +153,10 @@ export const Globe = () => {
   }, []);
 
   return (
-    <div className="relative z-10" style={{ width: SIZE, height: SIZE }}>
+    <div
+      className="relative z-10 translate-y-56"
+      style={{ width: SIZE, height: SIZE }}
+    >
       <canvas
         id="cobe"
         ref={canvasRef}
