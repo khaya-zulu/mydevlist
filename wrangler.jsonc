@@ -42,4 +42,9 @@
       "new_sqlite_classes": ["DevAgent"],
     },
   ],
+  "send_email": [
+    {
+      "name": "EMAIL",
+    },
+  ],
 }

@@ -19,7 +19,8 @@
     "release": "rw-scripts ensure-deploy-env && npm run clean && npm run build && wrangler deploy",
     "generate": "rw-scripts ensure-env && wrangler types --include-runtime false",
     "check": "npm run generate && npm run types",
-    "types": "tsc"
+    "types": "tsc",
+    "email": "./scripts/send-test-email.sh"
   },
   "dependencies": {
     "@browserbasehq/stagehand": "^3.4.0",
@@ -28,6 +29,7 @@
     "clsx": "^2.1.1",
     "cobe": "^2.0.1",
     "motion": "^12.40.0",
+    "postal-mime": "^2.7.4",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-server-dom-webpack": "19.2.6",
