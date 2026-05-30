@@ -3,7 +3,6 @@ import { defineApp } from "rwsdk/worker";
 
 import { Document } from "@/app/document";
 import { setCommonHeaders } from "@/app/headers";
-import { Home } from "@/app/pages/home";
 import { WorkerEntrypoint } from "cloudflare:workers";
 import * as PostalMime from "postal-mime";
 
@@ -14,6 +13,9 @@ import { createErrorMessage } from "./app/utils/email";
 
 import { executeEmailAgent } from "@/app/utils/email";
 
+import { Home } from "@/app/pages/home";
+import { Dev } from "@/app/pages/dev";
+
 export type AppContext = {};
 
 const app = defineApp([
@@ -22,7 +24,7 @@ const app = defineApp([
     // setup ctx here
     ctx;
   },
-  render(Document, [route("/", Home)]),
+  render(Document, [route("/", Home), route("/:devId", Dev)]),
 ]);
 
 export default class DefaultWorker extends WorkerEntrypoint<Env> {
