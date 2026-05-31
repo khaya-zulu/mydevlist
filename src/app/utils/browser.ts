@@ -112,7 +112,9 @@ export const executeBrowserAgent = async (input: {
       Here is the request:
       ${prompt}
 
-      When you have gathered enough, STOP calling tools and reply with a written summary as your final message. Your final response must be the prose answer to the request — never end on a tool call.`,
+      When you have gathered enough, STOP calling tools and reply with a written summary as your final message. Your final response must be the prose answer to the request — never end on a tool call.
+
+      Format your final answer as Markdown. Where it adds value, link to relevant pages and resources using inline Markdown links (e.g. [their project](https://example.com)) — link to the developer's projects, blog posts, social profiles, and notable work rather than pasting raw URLs.`,
     });
 
     console.log(

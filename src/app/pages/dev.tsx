@@ -1,8 +1,8 @@
 import { env } from "cloudflare:workers";
 import type { RequestInfo } from "rwsdk/worker";
-import Markdown from "react-markdown";
-
+import { Markdown } from "@/app/components/markdown";
 import { ArrowUpRightIcon } from "@/app/components/icons/arrow-up-right";
+import { FeatherIcon } from "@/app/components/icons/feather";
 
 export const Dev = async ({ params }: RequestInfo) => {
   const slug = params.devId;
@@ -29,11 +29,14 @@ export const Dev = async ({ params }: RequestInfo) => {
     <div className="bg-white">
       <div className="p-10 bg-neutral-50 border-b border-neutral-200 pb-40">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-3xl font-instrument mb-2">
+          <a href="/" aria-label="Back home" className="inline-flex mb-8">
+            <FeatherIcon className="text-cyan-600" />
+          </a>
+          <h1 className="text-3xl font-instrument mb-3">
             Meet {developer.name ?? slug}
           </h1>
           {developer.role && (
-            <div className="text-dot-gothic-16 mb-2">{developer.role}</div>
+            <div className="text-dot-gothic-16 mb-4">{developer.role}</div>
           )}
           {developer.summary && (
             <p className="font-sans text-lg">{developer.summary}</p>
@@ -59,7 +62,7 @@ export const Dev = async ({ params }: RequestInfo) => {
             }}
           />
 
-          <div className="group absolute bottom-5 right-5 w-56 flex flex-col gap-2 bg-white p-2 rounded-md border border-neutral-800 shadow-lg transition-transform duration-200 ease-out group-hover:-translate-y-1">
+          <div className="group absolute bottom-5 right-5 w-56 flex flex-col gap-2 bg-white p-2 rounded-md border-2 border-neutral-800 shadow-lg transition-transform duration-200 ease-out group-hover:-translate-y-1">
             <img
               src={`/screenshots/${slug}`}
               alt={developer.name ?? slug}

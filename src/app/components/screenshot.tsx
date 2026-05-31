@@ -5,25 +5,21 @@ import { motion } from "motion/react";
 
 type ScreenshotProps = { slug: string } & ComponentProps<"img">;
 
-// Shows the digital version of a developer's screenshot by default and
-// crossfades to the original on hover, with a shimmer sweep across the swap.
-// Sizing comes from the `className` passed through to the (base) image.
 export const Screenshot = ({ slug, className, ...props }: ScreenshotProps) => {
   const [hovered, setHovered] = useState(false);
-
-  // Shared name so the screenshot morphs between the card and the dev page
-  // hero during a View Transition. Sanitised to a valid CSS custom-ident.
-  const viewTransitionName = `vt-${slug.replace(/[^a-zA-Z0-9]+/g, "-")}`;
 
   return (
     <motion.div
       className="relative overflow-hidden"
-      style={{ viewTransitionName }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
     >
       {/* Digital version (default) — drives the box size. */}
-      <img src={`/screenshots/${slug}/digital`} className={className} {...props} />
+      <img
+        src={`/screenshots/${slug}/digital`}
+        className={className}
+        {...props}
+      />
 
       {/* Original screenshot, revealed on hover. */}
       <motion.img
