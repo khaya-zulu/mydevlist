@@ -1,10 +1,30 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useMemo } from "react";
 
 import createGlobe from "cobe";
 
-import { polaroidMarkers } from "@/app/data/polaroids";
+// A developer pinned on the globe.
+export type GlobeMarker = {
+  slug: string;
+  name: string | null;
+};
+
+// Small rotation cycle so the floating polaroids look hand-placed.
+const ROTATIONS = [-6, 5, -4, 7, -5, 4];
+
+// Deterministic pseudo-random [lat, long] derived from the slug, so a
+// developer always lands at the same point without storing coordinates.
+function locationForSlug(slug: string): [number, number] {
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) {
+    hash = (hash * 31 + slug.charCodeAt(i)) | 0;
+  }
+  const a = Math.abs(hash);
+  const lat = (a % 1300) / 10 - 60; // -60..70
+  const long = ((a >> 4) % 3600) / 10 - 180; // -180..180
+  return [lat, long];
+}
 
 // Displayed (CSS) size of the square globe.
 const SIZE = 620;
@@ -53,11 +73,17 @@ function project(location: [number, number], phi: number, theta: number) {
   return { x: screenX, y: screenY, depth: lz };
 }
 
-export const Globe = () => {
+export const Globe = ({ markers }: { markers: GlobeMarker[] }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // One DOM ref per polaroid so we can move it in the render loop without
   // triggering React re-renders.
-  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+
+  // Assign each developer a (stable) point on the globe.
+  const placed = useMemo(
+    () => markers.map((m) => ({ ...m, location: locationForSlug(m.slug) })),
+    [markers],
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -85,9 +111,9 @@ export const Globe = () => {
       glowColor: [0, 0, 0],
       offset: [0, 0],
       markerElevation: MARKER_ELEVATION,
-      markers: polaroidMarkers.map((m) => ({
+      markers: placed.map((m) => ({
         location: m.location,
-        size: m.size,
+        size: 0.05,
       })),
       opacity: 0.9,
     });
@@ -124,8 +150,8 @@ export const Globe = () => {
       if (!dragging) phi += 0.003;
       globe.update({ phi });
 
-      for (const m of polaroidMarkers) {
-        const el = itemRefs.current[m.id];
+      for (const m of placed) {
+        const el = itemRefs.current[m.slug];
         if (!el) continue;
         const { x, y, depth } = project(m.location, phi, THETA);
         // Fade out as the marker rotates to the far side of the globe.
@@ -150,7 +176,7 @@ export const Globe = () => {
         (globe as any).destroy();
       }
     };
-  }, []);
+  }, [placed]);
 
   return (
     <div className="relative z-10" style={{ width: SIZE, height: SIZE }}>
@@ -165,22 +191,22 @@ export const Globe = () => {
           touchAction: "none",
         }}
       />
-      {polaroidMarkers.map((m) => (
-        <div
-          key={m.id}
+      {placed.map((m, i) => (
+        <a
+          key={m.slug}
+          href={`/${m.slug}`}
           ref={(el) => {
-            itemRefs.current[m.id] = el;
+            itemRefs.current[m.slug] = el;
           }}
           className="showcase-polaroid"
           style={
             {
-              "--polaroid-rotate": `${m.rotate}deg`,
+              "--polaroid-rotate": `${ROTATIONS[i % ROTATIONS.length]}deg`,
             } as React.CSSProperties
           }
         >
-          <img src={m.image} alt={m.caption} />
-          <span className="showcase-polaroid-caption">{m.caption}</span>
-        </div>
+          <img src={`/screenshots/${m.slug}/digital`} alt={m.name ?? m.slug} />
+        </a>
       ))}
 
       <div className="absolute -bottom-10 left-0 w-full text-center flex gap-2 justify-center text-cyan-800">

@@ -110,7 +110,12 @@ export class DevAgent extends Agent {
 
     await controlDb
       .update(sites)
-      .set({ status: "ready", name, role, updatedAt: new Date() })
+      .set({
+        status: "ready",
+        name,
+        role,
+        updatedAt: new Date(),
+      })
       .where(eq(sites.slug, slug));
 
     return bio;
