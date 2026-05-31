@@ -9,7 +9,7 @@ import { controlDb, sites } from "@/db/control";
 import { eq } from "drizzle-orm";
 
 export const createReplyMessage = (input: {
-  message: ForwardableEmailMessage;
+  message?: ForwardableEmailMessage;
   to: string;
   subject: string;
   body: string;
@@ -17,7 +17,9 @@ export const createReplyMessage = (input: {
   const { message, to, subject, body } = input;
 
   const msg = createMimeMessage();
-  msg.setHeader("In-Reply-To", message.headers.get("Message-ID") ?? "");
+  if (message) {
+    msg.setHeader("In-Reply-To", message.headers.get("Message-ID") ?? "");
+  }
   msg.setSender("no-reply@mydevlist.com");
   msg.setTo(to);
   msg.setSubject(subject);
@@ -47,12 +49,16 @@ const emailAgent = new ToolLoopAgent({
         if (existingSite) {
           return "Site already exists";
         } else {
-          await controlDb.insert(sites).values({ slug, url: pageUrl });
+          const [newSite] = await controlDb
+            .insert(sites)
+            .values({ slug, url: pageUrl })
+            .returning({ id: sites.id, slug: sites.slug, url: sites.url });
 
-          const stub = await env.DevAgent.getByName(slug);
-          await stub.onboard({ url: pageUrl, slug });
+          await env.ONBOARDING_WORKFLOW.create({
+            params: { url: pageUrl, slug },
+          });
 
-          return "Started onboarding developer";
+          return `Started onboarding developer ${newSite.slug} from ${newSite.url}`;
         }
       },
     }),

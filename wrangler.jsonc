@@ -60,6 +60,15 @@
     },
   ],
 
+  // Workflows: durable onboarding pipeline (src/workflows/onboarding.ts)
+  "workflows": [
+    {
+      "name": "onboarding-workflow",
+      "binding": "ONBOARDING_WORKFLOW",
+      "class_name": "OnboardingWorkflow",
+    },
+  ],
+
   // Durable Objects
   "durable_objects": {
     "bindings": [
