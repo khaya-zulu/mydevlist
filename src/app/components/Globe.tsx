@@ -210,7 +210,23 @@ export const Globe = ({ markers }: { markers: GlobeMarker[] }) => {
       ))}
 
       <div className="absolute -bottom-10 left-0 w-full text-center flex gap-2 justify-center text-cyan-800">
-        <a href="">Github</a>/<a href="/">@upshot_dev</a>
+        <a
+          href="https://github.com/khaya-zulu/mydevlist"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:underline"
+        >
+          Github
+        </a>
+        /
+        <a
+          href="https://upshot.dev"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:underline"
+        >
+          @upshot_dev
+        </a>
       </div>
     </div>
   );

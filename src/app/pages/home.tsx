@@ -1,7 +1,8 @@
-import { inArray } from "drizzle-orm";
+import { count, inArray } from "drizzle-orm";
 
 import { Globe, type GlobeMarker } from "@/app/components/globe";
 import { DevList } from "@/app/features/dev-list";
+import { Subscribe } from "@/app/features/subscribe";
 import { FeatherIcon } from "../components/icons/feather";
 import { controlDb, sites } from "@/db/control";
 
@@ -11,6 +12,11 @@ export const Home = async () => {
     .from(sites)
     .where(inArray(sites.status, ["ready", "visible"]))
     .limit(5);
+
+  const [{ value: devCount }] = await controlDb
+    .select({ value: count() })
+    .from(sites)
+    .where(inArray(sites.status, ["ready", "visible"]));
 
   return (
     <div className="flex items-start justify-between pl-12 sm:pl-24 pr-12 max-w-400 gap-10 mx-auto">
@@ -23,9 +29,7 @@ export const Home = async () => {
               <FeatherIcon />
               <h1 className="font-instrument text-4xl">My Dev List</h1>
             </div>
-            <div className="bg-cyan-600 text-white p-1">
-              283 Devs ❋ <u>Subscribe</u>
-            </div>
+            <Subscribe count={devCount} />
           </div>
         </div>
       </div>

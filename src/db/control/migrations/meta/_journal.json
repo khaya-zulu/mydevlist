@@ -15,6 +15,13 @@
       "when": 1780166198330,
       "tag": "0001_tense_sheva_callister",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1780247352013,
+      "tag": "0002_reflective_imperial_guard",
+      "breakpoints": true
     }
   ]
 }
