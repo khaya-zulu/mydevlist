@@ -6,12 +6,11 @@ import { FeatherIcon } from "../components/icons/feather";
 import { controlDb, sites } from "@/db/control";
 
 export const Home = async () => {
-  // Developers get pinned on the globe; their positions are randomised client
-  // side in the Globe component.
   const markers: GlobeMarker[] = await controlDb
     .select({ slug: sites.slug, name: sites.name })
     .from(sites)
-    .where(inArray(sites.status, ["ready", "visible"]));
+    .where(inArray(sites.status, ["ready", "visible"]))
+    .limit(5);
 
   return (
     <div className="flex items-start justify-between pl-12 sm:pl-24 pr-12 max-w-400 gap-10 mx-auto">
