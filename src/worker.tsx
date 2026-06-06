@@ -58,7 +58,7 @@ export default class DefaultWorker extends WorkerEntrypoint<Env> {
       });
 
       message.reply(
-        new EmailMessage("no-reply@mydevlist.dev", message.from, errorMessage),
+        new EmailMessage(env.ADMIN_EMAIL_FROM, message.from, errorMessage),
       );
 
       return;
@@ -67,7 +67,7 @@ export default class DefaultWorker extends WorkerEntrypoint<Env> {
     const response = await executeEmailAgent({ message, html: email.html });
 
     message.reply(
-      new EmailMessage("no-reply@mydevlist.dev", message.from, response),
+      new EmailMessage(env.ADMIN_EMAIL_FROM, message.from, response),
     );
   }
 
