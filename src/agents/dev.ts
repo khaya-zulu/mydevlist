@@ -87,7 +87,7 @@ export class DevAgent extends Agent {
             .string()
             .describe(
               "The developer's single, short job title — at most 3 words, no slashes or combined roles. E.g. 'Design Engineer', 'Frontend Developer', 'Software Engineer'. " +
-                "For a prominent leadership role at a notable company (e.g. founder or C-level such as CEO/CTO), append the company in parentheses, e.g. 'CEO (Shopify)', 'CTO (Vercel)'.",
+                "If the developer prominently features a specific company in their profile, append it in parentheses, e.g. 'CEO (Shopify)', 'Design Engineer (Vercel)'.",
             ),
           summary: z
             .string()

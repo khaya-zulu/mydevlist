@@ -6,8 +6,6 @@ import { setCommonHeaders } from "@/app/headers";
 import { WorkerEntrypoint, env } from "cloudflare:workers";
 import * as PostalMime from "postal-mime";
 
-import { generateText } from "ai";
-import { openai } from "@ai-sdk/openai";
 import { EmailMessage } from "cloudflare:email";
 import { createErrorMessage } from "./app/utils/email";
 
@@ -41,6 +39,13 @@ const app = defineApp([
 
 export default class DefaultWorker extends WorkerEntrypoint<Env> {
   async email(message: ForwardableEmailMessage) {
+    console.log("Message", message.from, message.to);
+
+    const allowList = env.ALLOW_LIST.split(",");
+    if (!allowList.includes(message.from)) {
+      return message.setReject("Address not allowed");
+    }
+
     const parser = new PostalMime.default();
     const rawEmail = new Response((message as any).raw);
 
@@ -53,7 +58,7 @@ export default class DefaultWorker extends WorkerEntrypoint<Env> {
       });
 
       message.reply(
-        new EmailMessage("no-reply@mydevlist.com", message.from, errorMessage),
+        new EmailMessage("no-reply@mydevlist.dev", message.from, errorMessage),
       );
 
       return;
@@ -62,7 +67,7 @@ export default class DefaultWorker extends WorkerEntrypoint<Env> {
     const response = await executeEmailAgent({ message, html: email.html });
 
     message.reply(
-      new EmailMessage("no-reply@mydevlist.com", message.from, response),
+      new EmailMessage("no-reply@mydevlist.dev", message.from, response),
     );
   }
 
