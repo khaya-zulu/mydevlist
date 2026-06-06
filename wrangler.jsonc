@@ -68,6 +68,7 @@
       "class_name": "OnboardingWorkflow",
     },
   ],
+  "keep_vars": true,
 
   // Durable Objects
   "durable_objects": {
