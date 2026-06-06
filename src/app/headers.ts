@@ -2,7 +2,7 @@ import { RouteMiddleware } from "rwsdk/router";
 
 export const setCommonHeaders =
   (): RouteMiddleware =>
-  ({ response, rw: { nonce } }) => {
+  ({ response }) => {
     if (!import.meta.env.VITE_IS_DEV_SERVER) {
       // Forces browsers to always use HTTPS for a specified time period (2 years)
       response.headers.set(
@@ -15,7 +15,8 @@ export const setCommonHeaders =
     response.headers.set("X-Content-Type-Options", "nosniff");
 
     // Stops browsers from sending the referring webpage URL in HTTP headers
-    response.headers.set("Referrer-Policy", "no-referrer");
+    response.headers.set("X-Frame-Options", "SAMEORIGIN");
+    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
 
     // Explicitly disables access to specific browser features/APIs
     response.headers.set(

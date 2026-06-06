@@ -4,6 +4,8 @@ import { Globe, type GlobeMarker } from "@/app/components/globe";
 import { DevList } from "@/app/features/dev-list";
 import { Subscribe } from "@/app/features/subscribe";
 import { FeatherIcon } from "../components/icons/feather";
+import { Seo } from "@/app/components/seo";
+import { SITE_DESCRIPTION, pageTitle } from "@/app/shared/site";
 import { controlDb, sites } from "@/db/control";
 
 export const Home = async () => {
@@ -19,7 +21,10 @@ export const Home = async () => {
     .where(inArray(sites.status, ["ready", "visible"]));
 
   return (
-    <div className="flex items-start justify-between pl-12 sm:pl-24 pr-12 max-w-400 gap-10 mx-auto">
+    <>
+      <Seo title={pageTitle()} description={SITE_DESCRIPTION} />
+
+      <div className="flex items-start justify-between pl-12 sm:pl-24 pr-12 max-w-400 gap-10 mx-auto">
       <div className="sticky top-0 h-screen flex items-center justify-center shrink-0">
         <div className="relative">
           <Globe markers={markers} />
@@ -35,5 +40,6 @@ export const Home = async () => {
       </div>
       <DevList />
     </div>
+    </>
   );
 };

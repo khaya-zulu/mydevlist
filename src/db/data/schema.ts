@@ -18,7 +18,7 @@ export const socialLinks = sqliteTable("social_links", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   platform: text("platform").notNull(),
-  url: text("url").notNull(),
+  url: text("url").notNull().unique(),
 });
 
 export const crawledLinks = sqliteTable("crawled_links", {

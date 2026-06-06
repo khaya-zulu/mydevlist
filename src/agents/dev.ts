@@ -29,7 +29,13 @@ export class DevAgent extends Agent {
   }
 
   async onboard(input: { url: string; slug: string }) {
-    const { url, slug } = input;
+    const { slug } = input;
+
+    // Normalise to the site's origin so a deep link
+    let url = input.url;
+    try {
+      url = new URL(input.url).origin;
+    } catch {}
 
     const bio = await executeBrowserAgent({
       prompt: `Learn about the developer and their portfolio website at ${url}. Visit the site, explore relevant sub pages, and summarise who the developer is and what they work on.`,
@@ -59,6 +65,13 @@ export class DevAgent extends Agent {
             .insert(crawledLinks)
             .values({ url, title })
             .onConflictDoNothing();
+        },
+        onExtractSocialLinks: async (links) => {
+          if (links.length === 0) return;
+
+          await this.db.insert(socialLinks).values(links).onConflictDoNothing({
+            target: socialLinks.url,
+          });
         },
       },
     });

@@ -3,6 +3,8 @@ import type { RequestInfo } from "rwsdk/worker";
 import { Markdown } from "@/app/components/markdown";
 import { ArrowUpRightIcon } from "@/app/components/icons/arrow-up-right";
 import { FeatherIcon } from "@/app/components/icons/feather";
+import { DevSeo } from "@/app/components/seo";
+import { pageTitle } from "@/app/shared/site";
 
 export const Dev = async ({ params }: RequestInfo) => {
   const slug = params.devId;
@@ -12,10 +14,13 @@ export const Dev = async ({ params }: RequestInfo) => {
 
   if (!developer) {
     return (
-      <div className="max-w-5xl mx-auto p-10">
-        <h1 className="text-2xl font-bold mb-2">Developer not found</h1>
-        <p>We couldn't find a developer at "{slug}".</p>
-      </div>
+      <>
+        <title>{pageTitle("Developer not found")}</title>
+        <div className="max-w-5xl mx-auto p-10">
+          <h1 className="text-2xl font-bold mb-2">Developer not found</h1>
+          <p>We couldn't find a developer at "{slug}".</p>
+        </div>
+      </>
     );
   }
 
@@ -26,7 +31,10 @@ export const Dev = async ({ params }: RequestInfo) => {
   });
 
   return (
-    <div className="bg-white">
+    <>
+      <DevSeo developer={developer} slug={slug} />
+
+      <div className="bg-white">
       <div className="p-10 bg-neutral-50 border-b border-neutral-200 pb-40">
         <div className="max-w-5xl mx-auto">
           <a href="/" aria-label="Back home" className="inline-flex mb-8">
@@ -133,6 +141,7 @@ export const Dev = async ({ params }: RequestInfo) => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };

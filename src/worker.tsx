@@ -32,6 +32,7 @@ const app = defineApp([
     return new Response(object.body, {
       headers: {
         "Content-Type": object.httpMetadata?.contentType ?? "image/png",
+        "Cache-Control": "public, max-age=86400, immutable",
       },
     });
   }),

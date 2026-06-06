@@ -1,4 +1,5 @@
 import styles from "./styles.css?url";
+import { SITE_DESCRIPTION, SITE_NAME } from "./shared/site";
 
 export const Document: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -7,15 +8,20 @@ export const Document: React.FC<{ children: React.ReactNode }> = ({
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>@redwoodjs/starter-minimal</title>
-      <link rel="stylesheet" href={styles} />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <title>{SITE_NAME}</title>
+      <meta name="description" content={SITE_DESCRIPTION} />
+      <meta name="theme-color" content="#ffffff" />
       <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=optional"
-        precedence="first"
+        rel="icon"
+        href="/favicon-light.svg"
+        media="(prefers-color-scheme: light)"
       />
+      <link
+        rel="icon"
+        href="/favicon-dark.svg"
+        media="(prefers-color-scheme: dark)"
+      />
+      <link rel="stylesheet" href={styles} />
       <link rel="modulepreload" href="/src/client.tsx" />
     </head>
     <body>

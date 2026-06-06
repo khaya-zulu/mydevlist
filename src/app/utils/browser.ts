@@ -4,6 +4,7 @@ import { openai } from "@ai-sdk/openai";
 import { launch, type Page } from "@cloudflare/playwright";
 import z from "zod";
 import { env } from "cloudflare:workers";
+import { platform } from "node:os";
 
 export type BrowserLink = { text: string; href: string };
 
@@ -14,6 +15,9 @@ export type BrowserHooks = {
     url: string;
     links: BrowserLink[];
   }) => void | Promise<void>;
+  onExtractSocialLinks?: (
+    links: { platform: string; url: string }[],
+  ) => void | Promise<void>;
   onTakeScreenshot?: (event: {
     url: string;
     screenshot: Buffer<ArrayBufferLike>;
@@ -24,6 +28,32 @@ const createBrowserTools = (page: Page, hooks: BrowserHooks = {}) => {
   let isFirstPageRead = true;
 
   return {
+    extractSocialLinks: tool({
+      description:
+        "Extract social profile links (GitHub, X, LinkedIn, etc.) from the current page. Use this on the homepage, about, or contact pages.",
+      inputSchema: z.object({
+        links: z
+          .array(
+            z.object({
+              platform: z
+                .string()
+                .describe(
+                  "The platform of the social profile, e.g: 'Github', 'X', 'LinkedIn'",
+                ),
+              url: z.url().describe("The URL of the social profile"),
+            }),
+          )
+          .min(1)
+          .describe("All social profile links found on the current page"),
+      }),
+      execute: async ({ links }) => {
+        console.log("EXTRACTING SOCIAL LINKS", links.length);
+        await hooks.onExtractSocialLinks?.(links);
+
+        const platforms = links.map((l) => l.platform).join(", ");
+        return `Recorded ${links.length} profile(s): ${platforms}`;
+      },
+    }),
     goToPage: tool({
       description:
         "Navigate the browser to a URL. Use this to visit a developer's website or one of its sub pages.",
@@ -105,6 +135,7 @@ export const executeBrowserAgent = async (input: {
     const result = await browserAgent.generate({
       prompt: `You are a browser agent that researches a developer's portfolio website.
       Use the provided tools to visit the site, read its pages, discover and visit relevant sub pages (e.g. about, projects, blog), and take screenshots when useful.
+      When you find social profile links (GitHub, X, LinkedIn, etc.), call extractSocialLinks with all of them from that page in one call.
       Only navigate within the site you were asked about. Do not follow unrelated external links.
 
       You have a limited budget of tool calls. Be efficient: visit a handful of the most relevant pages rather than exhausting every link. Aim to finish exploring within roughly 30 tool calls so you always have room to write your answer.
