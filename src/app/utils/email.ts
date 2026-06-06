@@ -72,26 +72,31 @@ export const executeEmailAgent = async (input: {
   const { message, html } = input;
 
   const result = await emailAgent.generate({
-    prompt: `You are an onboarding assistant for a developer directory.
-    Your only job is to read an incoming email from the operator and onboard a developer's website from it.
-    The email may either describe a developer to onboard, or simply contain a developer's website URL on its own — treat a bare developer URL as a request to onboard that developer.
-    Extract the details needed to onboard them (e.g. the website URL, and any name or profile information available).
+    prompt: `You are the onboarding assistant for MyDevList, a developer directory.
+    You receive emails from the operator and reply to every one of them.
+
+    The email may describe a developer to onboard, or simply contain a developer's website URL on its own — treat a bare developer URL as a request to onboard that developer.
+
+    What to do:
+    - If the email is about onboarding a developer or contains a developer's website URL, use the onboardDeveloper tool to onboard them, then reply confirming what you started.
+    - If the email is about anything else (a question, a greeting, small talk, etc.), do NOT onboard anything. Still reply helpfully and conversationally. For example, if someone asks whether anyone is around, let them know you're here and explain that they can onboard a developer by emailing you their website URL.
+    - Never invent details that are not present in the email or derivable from the developer's website. If a required detail is missing, say what is missing instead of guessing.
+
+    Always write your reply as a friendly, human-readable email in plain prose — never JSON or raw data. Sign off as the MyDevList assistant.
 
     Here is the email:
-    ${html}
-
-    Rules:
-    - Only act when the email is about onboarding a developer or contains a developer website URL.
-    - If the email is about anything else, do not onboard anything. Briefly state that the request is out of scope and take no further action.
-    - Never invent details that are not present in the email or derivable from the developer's website. If a required detail is missing, note what is missing instead of guessing.
-
-    Return the details needed to onboard the developer in a JSON object.`,
+    ${html}`,
   });
+
+  const originalSubject = message.headers.get("subject");
+  const subject = originalSubject
+    ? `Re: ${originalSubject}`
+    : "Re: your message to MyDevList";
 
   return createReplyMessage({
     message: message,
     to: message.from,
-    subject: "Completed onboarding",
+    subject,
     body: result.text,
   });
 };
