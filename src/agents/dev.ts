@@ -134,6 +134,12 @@ export class DevAgent extends Agent {
     return bio;
   }
 
+  async purge() {
+    await this.db.delete(socialLinks);
+    await this.db.delete(crawledLinks);
+    await this.db.delete(developer);
+  }
+
   async getProfile() {
     const [dev] = await this.db.select().from(developer).limit(1);
     const socials = await this.db.select().from(socialLinks);

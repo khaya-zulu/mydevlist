@@ -62,6 +62,28 @@ const emailAgent = new ToolLoopAgent({
         }
       },
     }),
+    removeDeveloper: tool({
+      description: "Remove a developer site by slug",
+      inputSchema: z.object({
+        slug: z.string().describe("The slug of the developer to remove"),
+      }),
+      execute: async ({ slug }) => {
+        console.log("REMOVING DEVELOPER", slug);
+
+        const [existingSite] = await controlDb
+          .select()
+          .from(sites)
+          .where(eq(sites.slug, slug));
+
+        if (!existingSite) {
+          return `No developer site found for slug ${slug}`;
+        }
+
+        await env.REMOVAL_WORKFLOW.create({ params: { slug } });
+
+        return `Started removing developer ${slug}`;
+      },
+    }),
   },
 });
 
@@ -79,7 +101,8 @@ export const executeEmailAgent = async (input: {
 
     What to do:
     - If the email is about onboarding a developer or contains a developer's website URL, use the onboardDeveloper tool to onboard them, then reply confirming what you started.
-    - If the email is about anything else (a question, a greeting, small talk, etc.), do NOT onboard anything. Still reply helpfully and conversationally. For example, if someone asks whether anyone is around, let them know you're here and explain that they can onboard a developer by emailing you their website URL.
+    - If the email asks to remove, delete or take down a developer, use the removeDeveloper tool with their slug, then reply confirming what you started.
+    - If the email is about anything else (a question, a greeting, small talk, etc.), do NOT onboard or remove anything. Still reply helpfully and conversationally. For example, if someone asks whether anyone is around, let them know you're here and explain that they can onboard a developer by emailing you their website URL.
     - Never invent details that are not present in the email or derivable from the developer's website. If a required detail is missing, say what is missing instead of guessing.
 
     Always write your reply as a friendly, human-readable email in plain prose — never JSON or raw data. Sign off as the MyDevList assistant.

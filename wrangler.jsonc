@@ -67,6 +67,11 @@
       "binding": "ONBOARDING_WORKFLOW",
       "class_name": "OnboardingWorkflow",
     },
+    {
+      "name": "removal-workflow",
+      "binding": "REMOVAL_WORKFLOW",
+      "class_name": "RemovalWorkflow",
+    },
   ],
   "keep_vars": true,
 
