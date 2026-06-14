@@ -2,7 +2,7 @@ export const SITE_NAME = "My Dev List";
 export const SITE_DESCRIPTION =
   "A curated directory of developers and their portfolio sites.";
 export const SITE_URL = "https://mydevlist.dev";
-export const SITE_OG_IMAGE = `/mydevlist.png`;
+export const SITE_OG_IMAGE = `https://mydevlist.dev/mydevlist.png`;
 
 export function pageTitle(page?: string) {
   return page ? `${page} — ${SITE_NAME}` : SITE_NAME;
