@@ -33,7 +33,7 @@ export class OnboardingWorkflow extends WorkflowEntrypoint<
       });
 
       await this.env.EMAIL.send(
-        new EmailMessage("no-reply@mydevlist.com", to, raw),
+        new EmailMessage(this.env.ADMIN_EMAIL_TO, to, raw),
       );
     });
   }
