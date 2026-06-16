@@ -78,4 +78,5 @@ export default class DefaultWorker extends WorkerEntrypoint<Env> {
 
 export { DevAgent } from "@/agents/dev";
 export { OnboardingWorkflow } from "@/workflows/onboarding";
+export { PendingWorkflow } from "@/workflows/pending";
 export { RemovalWorkflow } from "@/workflows/removal";

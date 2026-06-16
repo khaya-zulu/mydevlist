@@ -22,6 +22,9 @@ declare namespace Cloudflare {
     REMOVAL_WORKFLOW: Workflow<
       Parameters<import("./src/worker").RemovalWorkflow["run"]>[0]["payload"]
     >;
+    PENDING_WORKFLOW: Workflow<
+      Parameters<import("./src/worker").PendingWorkflow["run"]>[0]["payload"]
+    >;
   }
 }
 interface Env extends Cloudflare.Env {}

@@ -72,6 +72,11 @@
       "binding": "REMOVAL_WORKFLOW",
       "class_name": "RemovalWorkflow",
     },
+    {
+      "name": "pending-workflow",
+      "binding": "PENDING_WORKFLOW",
+      "class_name": "PendingWorkflow",
+    },
   ],
   "keep_vars": true,
 
