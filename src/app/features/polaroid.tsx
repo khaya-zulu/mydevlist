@@ -27,14 +27,19 @@ export const Polaroid = ({
   useEffect(() => {
     if (!copied) return;
 
-    const timeout = window.setTimeout(() => setCopied(false), 2000);
+    const timeout = window.setTimeout(() => {
+      setCopied(false);
+      copyIconRef.current?.stopAnimation();
+    }, 2000);
     return () => window.clearTimeout(timeout);
   }, [copied]);
 
   const copyUrl = async () => {
-    navigator.clipboard.writeText(dev.url);
-    setCopied(true);
-    copyIconRef.current?.startAnimation();
+    try {
+      await navigator.clipboard.writeText(dev.url);
+      setCopied(true);
+      copyIconRef.current?.startAnimation();
+    } catch {}
   };
 
   return (
