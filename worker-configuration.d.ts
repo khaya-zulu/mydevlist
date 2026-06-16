@@ -25,6 +25,9 @@ declare namespace Cloudflare {
     PENDING_WORKFLOW: Workflow<
       Parameters<import("./src/worker").PendingWorkflow["run"]>[0]["payload"]
     >;
+    DIGITAL_IMAGE_WORKFLOW: Workflow<
+      Parameters<import("./src/worker").DigitalImageWorkflow["run"]>[0]["payload"]
+    >;
   }
 }
 interface Env extends Cloudflare.Env {}

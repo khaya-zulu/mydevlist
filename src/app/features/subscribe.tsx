@@ -73,7 +73,7 @@ export const Subscribe = ({ count }: { count: number }) => {
             exit={{ opacity: 0 }}
             onClick={() => setMode("form")}
           >
-            {count} Devs ❋ <u>Subscribe</u>
+            {count} Devs Indexed ❋ <u>Subscribe</u>
           </motion.button>
         )}
       </AnimatePresence>

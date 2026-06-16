@@ -4,7 +4,6 @@ import { openai } from "@ai-sdk/openai";
 import { launch, type Page } from "@cloudflare/playwright";
 import z from "zod";
 import { env } from "cloudflare:workers";
-import { platform } from "node:os";
 
 export type BrowserLink = { text: string; href: string };
 
