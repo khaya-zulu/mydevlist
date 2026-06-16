@@ -29,6 +29,14 @@ export const createReplyMessage = (input: {
   return msg.toString();
 };
 
+const normalizeSiteUrl = (url: string): string => {
+  try {
+    return new URL(url).origin;
+  } catch {
+    return url;
+  }
+};
+
 const emailAgent = new ToolLoopAgent({
   model: openai("gpt-5.5"),
   tools: {
@@ -51,11 +59,11 @@ const emailAgent = new ToolLoopAgent({
         } else {
           const [newSite] = await controlDb
             .insert(sites)
-            .values({ slug, url: pageUrl })
+            .values({ slug, url: normalizeSiteUrl(pageUrl) })
             .returning({ id: sites.id, slug: sites.slug, url: sites.url });
 
           await env.ONBOARDING_WORKFLOW.create({
-            params: { url: pageUrl, slug },
+            params: { url: newSite.url, slug },
           });
 
           return `Started onboarding developer ${newSite.slug} from ${newSite.url}`;
