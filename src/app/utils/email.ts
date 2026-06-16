@@ -6,7 +6,7 @@ import z from "zod";
 import { env } from "cloudflare:workers";
 
 import { controlDb, sites } from "@/db/control";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 
 export const createReplyMessage = (input: {
   message?: ForwardableEmailMessage;
@@ -71,25 +71,37 @@ const emailAgent = new ToolLoopAgent({
       },
     }),
     removeDeveloper: tool({
-      description: "Remove a developer site by slug",
+      description: "Remove a developer site by slug or website URL",
       inputSchema: z.object({
-        slug: z.string().describe("The slug of the developer to remove"),
+        slugOrUrl: z
+          .string()
+          .describe(
+            "The slug or website URL of the developer to remove. If a URL is given, use the base origin only (e.g. https://example.com).",
+          ),
       }),
-      execute: async ({ slug }) => {
-        console.log("REMOVING DEVELOPER", slug);
+      execute: async ({ slugOrUrl }) => {
+        console.log("REMOVING DEVELOPER", slugOrUrl);
+
+        const normalizedUrl = normalizeSiteUrl(slugOrUrl);
 
         const [existingSite] = await controlDb
           .select()
           .from(sites)
-          .where(eq(sites.slug, slug));
+          .where(
+            or(
+              eq(sites.slug, slugOrUrl),
+              eq(sites.url, slugOrUrl),
+              eq(sites.url, normalizedUrl),
+            ),
+          );
 
         if (!existingSite) {
-          return `No developer site found for slug ${slug}`;
+          return `No developer site found for ${slugOrUrl}`;
         }
 
-        await env.REMOVAL_WORKFLOW.create({ params: { slug } });
+        await env.REMOVAL_WORKFLOW.create({ params: { slug: existingSite.slug } });
 
-        return `Started removing developer ${slug}`;
+        return `Started removing developer ${existingSite.slug}`;
       },
     }),
   },
@@ -109,7 +121,7 @@ export const executeEmailAgent = async (input: {
 
     What to do:
     - If the email is about onboarding a developer or contains a developer's website URL, use the onboardDeveloper tool to onboard them, then reply confirming what you started.
-    - If the email asks to remove, delete or take down a developer, use the removeDeveloper tool with their slug, then reply confirming what you started.
+    - If the email asks to remove, delete or take down a developer, use the removeDeveloper tool with their slug or website URL, then reply confirming what you started.
     - If the email is about anything else (a question, a greeting, small talk, etc.), do NOT onboard or remove anything. Still reply helpfully and conversationally. For example, if someone asks whether anyone is around, let them know you're here and explain that they can onboard a developer by emailing you their website URL.
     - Never invent details that are not present in the email or derivable from the developer's website. If a required detail is missing, say what is missing instead of guessing.
 

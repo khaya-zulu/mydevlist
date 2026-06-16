@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Screenshot } from "@/app/components/screenshot";
 
 import { ArrowUpRightIcon } from "@/app/components/icons/arrow-up-right";
 import { ArrowRightIcon } from "@/app/components/icons/arrow-right";
+import { CopyIcon, type CopyIconHandle } from "@/app/components/icons/copy";
 
 export const Polaroid = ({
   dev,
@@ -19,6 +21,21 @@ export const Polaroid = ({
   index: number;
 }) => {
   const displayUrl = dev.url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const [copied, setCopied] = useState(false);
+  const copyIconRef = useRef<CopyIconHandle>(null);
+
+  useEffect(() => {
+    if (!copied) return;
+
+    const timeout = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(timeout);
+  }, [copied]);
+
+  const copyUrl = async () => {
+    navigator.clipboard.writeText(dev.url);
+    setCopied(true);
+    copyIconRef.current?.startAnimation();
+  };
 
   return (
     <motion.div
@@ -40,7 +57,7 @@ export const Polaroid = ({
         />
 
         <div className="absolute bottom-5 transition-colors duration-300 border-2 border-transparent group-hover:border-neutral-800 right-5 text-xs bg-white rounded-2xl px-3 py-1.5 flex items-center gap-2">
-          {displayUrl}
+          {copied ? "copied" : displayUrl}
           <ArrowUpRightIcon size={14} />
         </div>
       </a>
@@ -50,9 +67,19 @@ export const Polaroid = ({
           <div className="font-instrument">{dev.role ?? "Developer"}</div>
         </div>
 
-        <a href={`/${dev.slug}`} target="_blank" rel="noreferrer">
-          <ArrowRightIcon size={18} />
-        </a>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={copyUrl}
+            aria-label="Copy website URL"
+            className="cursor-pointer"
+          >
+            <CopyIcon ref={copyIconRef} size={18} />
+          </button>
+          <a href={`/${dev.slug}`} target="_blank" rel="noreferrer">
+            <ArrowRightIcon size={18} />
+          </a>
+        </div>
       </div>
     </motion.div>
   );
