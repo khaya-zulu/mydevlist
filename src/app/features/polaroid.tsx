@@ -30,7 +30,7 @@ export const Polaroid = ({
     const timeout = window.setTimeout(() => {
       setCopied(false);
       copyIconRef.current?.stopAnimation();
-    }, 2000);
+    }, 1000);
     return () => window.clearTimeout(timeout);
   }, [copied]);
 
