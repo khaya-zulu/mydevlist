@@ -1,3 +1,7 @@
+[![My Dev List](public/mydevlist.png)](https://mydevlist.dev)
+
+[mydevlist.dev](https://mydevlist.dev)
+
 # My Dev List
 
 A directory of software engineers. Each entry is a developer's portfolio that has been crawled, summarised and turned into a profile page by an AI agent.
